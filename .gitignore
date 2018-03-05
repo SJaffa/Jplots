@@ -1,0 +1,27 @@
+
+#============DATA FILES
+HiGAL_tiles/
+Ken_rcw120/
+L1495_cdens.fits
+Liz_ridge/
+SeamusFilaments/
+J-plotsData/
+
+#===============OTHER
+
+
+*.pyc
+*.py~
+*.pdf
+*.png
+
+
+#=============PARAMETER INPUT FILES
+
+*Params.txt
+
+#=============Personal files
+Nat_v_comp.txt
+cubetest.py
+dendrolevels.py
+dendroplotter.py
