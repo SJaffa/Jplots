@@ -1,0 +1,9 @@
+filename	filename
+root        path/to/folder/forreading/andsaving
+mask_xmin	0
+mask_xmax	-1
+mask_ymin	0
+mask_ymax	-1
+min_value	minimum background level
+min_delta	minimum intensity difference
+min_npix	minimum area
