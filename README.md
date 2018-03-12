@@ -22,9 +22,11 @@ wavelength/tracer or column density).
 USAGE
 #============================================================
 
-The main file is jplots.py
-This reads in the specified parameters file (see example), 
-builds a dendrogram, and analyses all the structures. It outputs
+The main file is jplots.py whichuse the example_Params.txt file
+to set up analyse the HiGAL tile descibed in the paper.
+
+This reads in the specified parameters file, builds a 
+dendrogram, and analyses all the structures. It outputs
 an interactive J plot and image of the data, and if you are 
 analysing multiple files it creates a plot of all the structures 
 from all the files.
