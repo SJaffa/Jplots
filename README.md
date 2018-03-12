@@ -44,4 +44,4 @@ PAPER
 A full description of this algorithm, the proof of concept 
 tests, and some example stronomical applications are described 
 in the paper. A PDF is included in this repository or can be 
-found on arXiv.
+found on arXiv at https://arxiv.org/abs/1803.01640
