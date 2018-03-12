@@ -1,0 +1,9 @@
+filename	nh2C_mosaic341352
+root        ./
+mask_xmin	0
+mask_xmax	-1
+mask_ymin	1600
+mask_ymax	2200
+min_value	5e21
+min_delta	1e22
+min_npix	200

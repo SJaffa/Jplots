@@ -10,26 +10,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 import momentsmod as mm
-#from astropy import wcs
-#===#needed for Liz's plotting, but that seems to be broken right now
 import os
 from astropy.io import fits
 from astrodendro import Dendrogram
-import time
+
 import glob as gb
 import sys
 
-#================================================fits file
 
-s = time.time()
-
-thing=mm.ReadParameters("./Seamus_comp_Params.txt")
+#Read in parameters file
+thing=mm.ReadParameters("./example_Params.txt")
 
 
-if "*" in thing['filename']:
+if "*" in thing['filename']: #Many fits files to run
     filelist=gb.glob("%s%s.fits"%(thing['root'],thing['filename']))
     nfiles=len(filelist)
-else:
+else: #Just one fits file
     nfiles=1
     filelist=["%s%s.fits"%(thing['root'],thing['filename'])]
               
@@ -39,7 +35,7 @@ if nfiles==0:
     sys.exit()
         
 nloop=0 #loop counter for multiple files
-all_structs=np.zeros((1,6))
+all_structs=np.zeros((1,6)) #info on j-plot coordinates of each structure and if the structure is a branch, trunk or leaf
 all_npix=[]
 clump_mass=[]
 
@@ -55,7 +51,6 @@ while nloop<nfiles:
     #Check if the input was a 3D cube or 2D image
     data,threedee=mm.check_dimensions(datao)
 
-    #data=data/0.75
     if 0:#slice data cube along velocity axis
         threedee=False
         data=datao[vslice,:,:]
@@ -63,7 +58,7 @@ while nloop<nfiles:
     data=data[thing['mask_xmin']:thing['mask_xmax'], 
               thing['mask_ymin']:thing['mask_ymax']]
               
-    # BUILD OR READ IN DENDROGRAM
+    # BUILD DENDROGRAM
     print "====Building dend"
 
     d = Dendrogram.compute(data, 
@@ -74,7 +69,6 @@ while nloop<nfiles:
         # SET UP PLOT
     
         bigax,dendax,f=mm.plot_interactive_axes(d,threedee=threedee)
-        #f,bigax=mm.plot_moments_axes()
         
         if threedee:
             im=dendax.imshow(np.sum(data,axis=0),interpolation='none',
@@ -84,18 +78,18 @@ while nloop<nfiles:
             im=dendax.imshow(data,interpolation='none',
                              origin='lower', #norm=LogNorm(),cmap='jet',
                              vmin=thing['min_value'],)# vmax=1e3)
-        #fn=plt.gcf().number
-        #mm.figure_wsc_GC(fn,header1)
+
+        
         plt.colorbar(im,ax=dendax)
-        plt.title(filelist[nloop][64:-5])
+        plt.title(filelist[nloop])
         
             
         # CHECK HOW MANY STRUCTURES   
         nl=sum([len(d.trunk[i].descendants) for i in range(len(d.trunk))])+len(d.trunk)
         print '====Testing %i structures'%nl
         trunks=[t.idx for t in d.trunk]        
-            
-        #%%
+
+        
         desc=np.zeros((nl,2))    #info on descendants of each structure
         structs=np.zeros((nl,6)) #info on j-plot coordinates of each structure and if the structure is a branch, trunk or leaf
         
@@ -113,7 +107,8 @@ while nloop<nfiles:
                 clump_mass.append(0)
             
             all_npix.append(npx)
-            #%% calculate moments and plot
+            
+            #calculate moments and plot
             I1,I2,com,_ =mm.moments_2(grid_2d)
         
 
@@ -142,10 +137,8 @@ while nloop<nfiles:
                 filename=filelist[nloop]+"_Structures/%i.dat"%idx
                 np.savetxt(filename, grid_2d)
         
-            if(I1<0 and I2<0):
-                print "In the blue, I1 = ", I1, " and I2 = ", I2, ", structure = ", idx
-        
-            #%% save id and location for plotting merger paths later
+       
+            #save id and location for plotting merger paths later
     
             #check trunk/leaf
             if l.is_leaf:
@@ -163,25 +156,12 @@ while nloop<nfiles:
                 bigax.plot(I1,I2,'o',label=l.idx,mec='k',mfc='grey',picker=4,gid=str(idx))
                 desc[idx,:]=[tl.idx for tl in l.children]
                 structs[idx,:]=[idx,I1,I2,3,l.get_npix(),clump_mass[-1]]
-            if 0: #add structure ID
+            if 0: #add structure ID to plot?
                 bigax.text(I1,I2,"%i"%idx,color='k')
 
-    
-            if 0: #save plot of individual structures
-                plt.figure(figsize=(4,4))
-                ax=plt.gca()
-                ax.imshow(grid_2d,interpolation='none',origin='lower', cmap='rainbow',norm=LogNorm())
-                ax.text(0.05,0.90,"%i"%idx,color='k',transform=ax.transAxes,)
-                ax.plot(com[1],com[0], 'ko',)
-                plt.savefig(filelist[nloop]+"_Structures%i.png"%idx)
-                plt.close()
 
-        
-        if 0:
-            plt.show()
-            plt.close("all")
             
-        if 0: #save results file.
+        if 0: #save results file with data on structures in this fits file
             resfile="%s_RES_%s_%s_%s"%(filelist[nloop],thing['min_value'],thing['min_npix'],thing['min_delta'])
 
             if not (os.path.isdir(thing['root']+resfile)):
@@ -228,12 +208,13 @@ ID\tJ1\tJ2\tnpix\tMass(m_sun)\tTpeak\tpeak_v\tpeak_x\tpeak_y\n"""%(thing['filena
     nloop+=1 
     vslice+=1
     
-if 0: #save results file.
+if 0: #save results file with data on structures in all fits files
 
     resfile="%s_RES_%s_%s_%s"%(thing['filename'],thing['min_value'],thing['min_npix'],thing['min_delta'])
     
     if not (os.path.isdir(thing['root']+resfile)):
         np.savetxt(thing['root']+resfile, structs)
+        
 if 0:  #plot tree
     p = d.plotter()
     fig = plt.figure()
@@ -297,7 +278,4 @@ if 0: #analyse masses
 
 
 
-#Caluclate runtime
-e = time.time()
-dt = e-s
-print "Time taken = ", dt
+
