@@ -5,8 +5,9 @@ SUMMARY
 #============================================================
 
 
-We can separate structures in an image using dendrograms
-and then use the principal moment of inertia of these structures to
+We can separate structures in a 2D image using dendrograms 
+(https://dendrograms.readthedocs.io/en/stable/) and then 
+use the principal moment of inertia of these structures to
 classify their shapes.
 
 This code is able to separate centrally concentrated structures
@@ -14,7 +15,7 @@ This code is able to separate centrally concentrated structures
 structures (bubbles) from the main population of ‘slightly
 irregular blobs’ that make up most astronomical images.
 
-This can be applied to any greyscale image (single
+This can be applied to any 2D greyscale image (single
 wavelength/tracer or column density).
 
 
@@ -22,7 +23,7 @@ wavelength/tracer or column density).
 USAGE
 #============================================================
 
-The main file is jplots.py whichuse the example_Params.txt file
+The main file is jplots.py which uses the example_Params.txt file
 to set up analyse the HiGAL tile descibed in the paper.
 
 This reads in the specified parameters file, builds a 
@@ -33,8 +34,7 @@ from all the files.
 
 It should be pretty simple to run this code and get the plots 
 out, but if you want to do anything more complicated please
-contact the authors on sarah.jaffa@astro.cf.ac.uk as the
-code is still a bit of a mess.
+contact the authors on s.jaffa@herts.ac.uk.
 
 Thanks!
 
@@ -44,6 +44,6 @@ PAPER
 #============================================================
 
 A full description of this algorithm, the proof of concept 
-tests, and some example stronomical applications are described 
+tests, and some example astronomical applications are described 
 in the paper. A PDF is included in this repository or can be 
 found on arXiv at https://arxiv.org/abs/1803.01640
