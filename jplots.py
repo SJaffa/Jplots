@@ -14,6 +14,7 @@ import os
 from astropy.io import fits
 from astrodendro import Dendrogram
 
+
 import glob as gb
 import sys
 
@@ -101,15 +102,17 @@ while nloop<nfiles:
                                                        thing['pixel_pc'],
                                                        thing['pixel_vel'])
                 clump_mass.append(mass_msun)
+                I1,I2,I3,com,_ =mm.moments_3d(grid_2d)
                 #print idx,mass_msun
             else:
                 grid_2d,npx=mm.make_grid_2d(l)
                 clump_mass.append(0)
+                I1,I2,com,_ =mm.moments_2d(grid_2d)
             
             all_npix.append(npx)
             
             #calculate moments and plot
-            I1,I2,com,_ =mm.moments_2(grid_2d)
+            
         
 
             if 0: #save plot of individual structures

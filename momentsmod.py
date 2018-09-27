@@ -7,6 +7,7 @@ Created on Fri Feb 17 10:45:04 2017
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.ndimage.measurements import center_of_mass as spcom
 
 def ColDens_13co(grid,dv):
     #convert grid of brightness temp (PPV) to column density of 13CO (PP)
@@ -186,7 +187,7 @@ def single_structure_evolution(d,struct_id,nslices=20):
         ax.set_yticks([])
                     
         #calculate moments
-        J1,J2,_,_ =moments_2(levelgrid)
+        J1,J2,_,_ =moments_2d(levelgrid)
         j1s.append(J1)
         j2s.append(J2)
         
@@ -263,6 +264,7 @@ def ReadParameters(param_file):
 
     type_of_var = {"filename":"str",
                    "root":"str",
+                   "dims":"int",
                    "mask_xmin":"int",
                    "mask_xmax":"int",
                    "mask_ymin":"int",
@@ -275,6 +277,7 @@ def ReadParameters(param_file):
 
     param = {"filename":"holder",
              "root":"holder",
+             "dims":2,
              "mask_xmin":1,
              "mask_xmax":1,
              "mask_ymin":1,
@@ -341,45 +344,11 @@ def filament_grid(xpix, ypix, nfils, fil_length, fil_width,seed=0):
                     if (y-ypos[i])-(grad*(x-xpos[i]))<0.0001:
                         grid[x,y]+=1
     return grid
-        
-        
-def find_com(grid):
-    com=np.array([0,0])
-    nx=grid.shape[0]
-    ny=grid.shape[1]
-    for i in range(nx):
-        for j in range(ny):
-            com =com + grid[i,j]*np.array([i,j])
-    com=com/np.sum(grid)
 
-    return com
-
-def find_com2(grid):
-    com = np.array([0,0],dtype=float)
-    nx=grid.shape[0]
-    ny=grid.shape[1]
-
-    ax = np.linspace(0,nx-1,nx)
-    ay = np.linspace(0,ny-1,ny)
-
-    com[0] = np.sum(np.sum(grid,axis=1)*ax)
-    com[1] = np.sum(np.sum(grid,axis=0)*ay)
-
-    com=com/np.sum(grid)
-
-    return com
     
-def m11(grid,com):
-    nx=grid.shape[0]
-    ny=grid.shape[1]
-    dr11=0
-    for i in range(nx):
-        for j in range(ny):
-            dr11+=grid[i,j]*(j-com[1])**2
-    return dr11
 
-def m11_2(grid,com):
-    nx=grid.shape[0]
+
+def m11(grid,com):
     ny=grid.shape[1]
     dr11=0
 
@@ -389,18 +358,10 @@ def m11_2(grid,com):
 
     return dr11
     
+
+
 def m22(grid,com):
     nx=grid.shape[0]
-    ny=grid.shape[1]
-    dr22=0
-    for i in range(nx):
-        for j in range(ny):
-            dr22+=grid[i,j]*(i-com[0])**2
-    return dr22
-
-def m22_2(grid,com):
-    nx=grid.shape[0]
-    ny=grid.shape[1]
     dr22=0
 
     ax = np.linspace(0,nx-1,nx)
@@ -410,16 +371,9 @@ def m22_2(grid,com):
     return dr22
     
 
-def m12(grid,com):
-    nx=grid.shape[0]
-    ny=grid.shape[1]
-    dr12=0
-    for i in range(nx):
-        for j in range(ny):
-            dr12+=grid[i,j]*(i-com[0])*(j-com[1])
-    return dr12
 
-def m12_2(grid,com):
+
+def m12(grid,com):
     nx=grid.shape[0]
     ny=grid.shape[1]
     dr12=0
@@ -440,30 +394,11 @@ def theta(M11,M22,M12):
 
     return th
     
-def i1(grid,com):
-    M11=m11(grid,com)
-    M22=m22(grid,com)
-    M12=m12(grid,com)
-    tt=theta(M11,M22,M12)
-    res=(M11*np.cos(tt)*np.cos(tt)) + \
-        (M22*np.sin(tt)*np.sin(tt)) + \
-        (M12*np.sin(2*tt))
-    return res, tt
-    
-def i2(grid,com):
-    M11=m11(grid,com)
-    M22=m22(grid,com)
-    M12=m12(grid,com)
-    tt=theta(M11,M22,M12)
-    res=(M11*np.sin(tt)*np.sin(tt)) + \
-        (M22*np.cos(tt)*np.cos(tt)) - \
-        (M12*np.sin(2*tt))
-    return res,tt
 
 def i12(grid,com):
-    M11=m11_2(grid,com)
-    M22=m22_2(grid,com)
-    M12=m12_2(grid,com)
+    M11=m11(grid,com)
+    M22=m22(grid,com)
+    M12=m12(grid,com)
     tt=theta(M11,M22,M12)
 
     i1=(M11*np.cos(tt)*np.cos(tt)) + \
@@ -476,22 +411,9 @@ def i12(grid,com):
 
     return i1,i2,tt
     
-def moments(g):
-    com=find_com(g)
-    Atot=np.count_nonzero(g)
-    Mtot=np.sum(g)
-    I1,t1=i1(g,com)
-    I2,t2=i2(g,com)
-    first=min([I1,I2])
-    second=max([I1,I2])
-    ma=Atot*Mtot
-    II1=(ma - 4*np.pi*first)/(ma + 4*np.pi*first)
-    II2=(ma - 4*np.pi*second)/(ma + 4*np.pi*second)
 
-    return II1,II2,com,t1
-
-def moments_2(g):
-    com=find_com2(g)
+def moments_2d(g):
+    com=spcom(g)
     Atot=np.count_nonzero(g)
     Mtot=np.sum(g)
     I1,I2,t1=i12(g,com)
@@ -502,6 +424,19 @@ def moments_2(g):
     II2=(ma - 4*np.pi*second)/(ma + 4*np.pi*second)
 
     return II1,II2,com,t1
+
+def moments_3d(g):
+    com=spcom(g)
+    Atot=np.count_nonzero(g)
+    Mtot=np.sum(g)
+    I1,I2,t1=i12(g,com)
+    first=min([I1,I2])
+    second=max([I1,I2])
+    ma=Atot*Mtot
+    II1=(ma - 4*np.pi*first)/(ma + 4*np.pi*first)
+    II2=(ma - 4*np.pi*second)/(ma + 4*np.pi*second)
+
+    return II1,II2,II3,com,t1
     
 def plot_interactive_axes(d,text=False,threedee=False):
     
