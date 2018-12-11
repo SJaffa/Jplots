@@ -206,6 +206,28 @@ def single_structure_evolution(d,struct_id,nslices=20):
     
     return j1s,j2s,I,fig
     
+def find_com_2d(grid):
+    com=np.array([0,0])
+    nx=grid.shape[0]
+    ny=grid.shape[1]
+    for i in range(nx):
+        for j in range(ny):
+            com =com + grid[i,j]*np.array([i,j])
+    com=com/np.sum(grid)
+
+    return com
+
+def find_com_3d(grid):
+    com=np.array([0,0,0])
+    nx, ny, nz=grid.shape[:]
+
+    for i in range(nx):
+        for j in range(ny):
+            for k in range(nz):
+                com =com + grid[i,j, k]*np.array([i,j, k])
+    com=com/np.sum(grid)
+
+    return com
 
 def check_dimensions(data):
     print data.shape
@@ -580,7 +602,7 @@ def distance_to_fil(x,y):
     from diagonal line y=-x"""
     return (x+y)/np.sqrt(2)
     
-def testdata(n,shape='random'):
+def testdata2d(n,shape='noisy'):
     # n is gridsize
     grid=np.zeros((n,n))
     if shape=='ellipse-cc':
@@ -736,3 +758,77 @@ def testdata(n,shape='random'):
         grid[:,:int(n/2.)]=0
         
     return grid
+
+def testdata3d(n,shape='sphere'):
+    # n is gridsize
+    grid=np.zeros((n,n,n))
+    if shape=='sphere':
+        c=int(n/2.)
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
+                        grid[i,j,k]=1
+                        
+    if shape=='cc':
+        c=int(n/2.)
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
+                        grid[i,j,k]=1./(0.01+((i-c)**2 + (j-c)**2 + (k-c)**2))
+                        
+    if shape=='shell-thick':
+        c=int(n/2.)
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
+                        if ((i-c)**2 + (j-c)**2 + (k-c)**2)>((n/4.)**2):
+                            grid[i,j,k]=1
+                            
+    if shape=='shell-thin':
+        c=int(n/2.)
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
+                        if ((i-c)**2 + (j-c)**2 + (k-c)**2)>((n/2.1)**2):
+                            grid[i,j,k]=1
+    return grid
+
+def image_moment(image, p, q, r=-1, dims=2):
+    if dims==2:
+        m = im_2d(image, p, q)
+    elif dims==3:
+        if r==-1:
+            raise ValueError("Need order for 3rd dimension moment")
+        m = im_3d(image, p, q, r)
+    else:
+        raise ValueError("Number of dimensions is invalid")
+    return m
+        
+def im_2d(image,p,q):
+    nx, ny = image.shape
+    x_ind, y_ind = np.mgrid[:nx, :ny]
+    moment=(image * x_ind**p * y_ind**q).sum()
+    return moment
+        
+def im_3d(image,p,q,r):
+    nx, ny, nz = image.shape
+    x_ind, y_ind, z_ind = np.mgrid[:nx, :ny, :nz]
+    moment=(image * x_ind**p * y_ind**q * z_ind**r).sum()
+    return moment
+
+def im_com(image):
+    #0th moment is summ of pixel values
+    m00=image_moment(image,0,0)
+    m10=image_moment(image,1,0)
+    m01=image_moment(image,0,1)
+    
+    x_com=m10/m00
+    y_com=m01/m00
+    
+    return [x_com,y_com]
+    
+    
