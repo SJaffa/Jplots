@@ -759,6 +759,16 @@ def testdata2d(n,shape='noisy'):
         
     return grid
 
+def ellipsoid(n,a,b,c):
+    grid=np.zeros((n,n,n))
+    cen=int(n/2.)
+    for i in range(-cen,cen):
+        for j in range(-cen,cen):
+            for k in range(-cen,cen):
+                if (((i**2)/(a**2)) + ((j**2)/(b**2)) + ((k**2)/(c**2)))<1.:
+                    grid[i+cen,j+cen,k+cen]=1
+    return grid
+
 def testdata3d(n,shape='sphere'):
     # n is gridsize
     grid=np.zeros((n,n,n))
@@ -770,7 +780,25 @@ def testdata3d(n,shape='sphere'):
                     if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
                         grid[i,j,k]=1
                         
-    if shape=='cc':
+    elif shape=='ellipsoid-pro':
+        grid=ellipsoid(n,(n/3.),(n/3.),(n/2.))
+    
+    elif shape=='ellipsoid-ob':
+        grid=ellipsoid(n,(n/2.),(n/2.),(n/3.))
+        
+    elif shape=='ellipsoid-ob2':
+        grid=ellipsoid(n,(n/2.),(n/2.),(n/4.))
+        
+    elif shape=='ellipsoid-ob3':
+        grid=ellipsoid(n,(n/2.),(n/2.),(n/5.))
+        
+    elif shape=='ellipsoid-ob4':
+        grid=ellipsoid(n,(n/2.),(n/2.),(n/10.))
+        
+    elif shape=='ellipsoid-tri':
+        grid=ellipsoid(n,(n/2.),(n/4.),(n/7.))
+        
+    elif shape=='cc':
         c=int(n/2.)
         for i in range(n):
             for j in range(n):
@@ -778,7 +806,7 @@ def testdata3d(n,shape='sphere'):
                     if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
                         grid[i,j,k]=1./(0.01+((i-c)**2 + (j-c)**2 + (k-c)**2))
                         
-    if shape=='shell-thick':
+    elif shape=='shell-thick':
         c=int(n/2.)
         for i in range(n):
             for j in range(n):
@@ -787,7 +815,7 @@ def testdata3d(n,shape='sphere'):
                         if ((i-c)**2 + (j-c)**2 + (k-c)**2)>((n/4.)**2):
                             grid[i,j,k]=1
                             
-    if shape=='shell-thin':
+    elif shape=='shell-thin':
         c=int(n/2.)
         for i in range(n):
             for j in range(n):
@@ -795,8 +823,122 @@ def testdata3d(n,shape='sphere'):
                     if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
                         if ((i-c)**2 + (j-c)**2 + (k-c)**2)>((n/2.1)**2):
                             grid[i,j,k]=1
+
+    elif shape=='shell-thick-noise':
+        c=int(n/2.)
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
+                        if ((i-c)**2 + (j-c)**2 + (k-c)**2)>((n/4.)**2):
+                            grid[i,j,k]=1
+        noise=np.random.rand(int(0.001*n**3)).reshape(int(0.1*n),int(0.1*n),int(0.1*n))
+        noise=np.random.rand(int(n**3)).reshape(int(n),int(n),int(n))
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    #grid[i,j,k]=np.floor(grid[i,j,k]*2*noise[i/10,j/10,k/10])
+                    grid[i,j,k]=np.floor(grid[i,j,k]*2*noise[i,j,k])
+
+                            
+    elif shape=='shell-thin-noise':
+        c=int(n/2.)
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
+                        if ((i-c)**2 + (j-c)**2 + (k-c)**2)>((n/2.1)**2):
+                            grid[i,j,k]=1
+        noise=np.random.rand(int(0.001*n**3)).reshape(int(0.1*n),int(0.1*n),int(0.1*n))
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    grid[i,j,k]=np.floor(grid[i,j,k]*2*noise[i/10,j/10,k/10])
+        
+    elif shape=='shell-half':
+        c=int(n/2.)
+        for i in range(n/2):
+            for j in range(n):
+                for k in range(n):
+                    if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
+                        if ((i-c)**2 + (j-c)**2 + (k-c)**2)>((n/2.1)**2):
+                            grid[i,j,k]=1
+    
+    elif shape=='ring-thin':
+        k=0
+        for i in range(n):
+            dx=i-(n/2.)
+            for j in range(n):
+                dy=j-(n/2.)
+                dr=np.sqrt(dx**2 + dy**2)
+                if dr<n/2.:
+                    grid[i,j,k]=1
+                if dr<n/2.5:
+                    grid[i,j,k]=0
+                    
+    elif shape=='ring-half':
+        k=0
+        for i in range(n/2):
+            dx=i-(n/2.)
+            for j in range(n):
+                dy=j-(n/2.)
+                dr=np.sqrt(dx**2 + dy**2)
+                if dr<n/2.:
+                    grid[i,j,k]=1
+                if dr<n/2.5:
+                    grid[i,j,k]=0
+                            
+    elif shape=='fil-thick':
+                grid[int(n*0.4):int(n*0.6),int(n*0.4):int(n*0.6),:]=1
+                            
+    elif shape=='fil-thin':
+                grid[int(n*0.4):int(n*0.45),int(n*0.4):int(n*0.45),:]=1
+                
+    elif shape=='fil-asym':
+                grid[int(n*0.4):int(n*0.45),int(n*0.4):int(n*0.6),:]=1
+                
+    elif shape=='plane-thin':
+                grid[int(n/2.),:,:]=1
+                
+    elif shape=='rect-thin':
+                grid[int(n/2.),int(n/4.):int(3*n/4.),:]=1
+                
+    elif shape=='plane-thick':
+                grid[int(n*0.4):int(n*0.6),:,:]=1
+                
+    elif shape=='flat-disk':
+        k=0
+        for i in range(n):
+            dx=i-(n/2.)
+            for j in range(n):
+                dy=j-(n/2.)
+                dr=np.sqrt(dx**2 + dy**2)
+                if dr<n/3.:
+                    grid[i,j,k]=1 
+
+    elif shape=='thick-disk':
+        for k in range(int(0.4*n),int(0.6*n)):
+            for i in range(n):
+                dx=i-(n/2.)
+                for j in range(n):
+                    dy=j-(n/2.)
+                    dr=np.sqrt(dx**2 + dy**2)
+                    if dr<n/3.:
+                        grid[i,j,k]=1 
+                    
     return grid
 
+def small_3d_plot(ax,g):
+    ax.set_xlim3d(0,g.shape[0])
+    ax.set_ylim3d(0,g.shape[1])
+    ax.set_zlim3d(0,g.shape[2])
+
+    for i in range(g.shape[0]):
+        for j in range(g.shape[1]):
+            for k in range(g.shape[2]):
+                if (g[i,j,k]>0):
+                    ax.scatter([i],[j],[k],c='k',marker='.',alpha=0.1)
+                    
 def image_moment(image, p, q, r=-1, dims=2):
     if dims==2:
         m = im_2d(image, p, q)
@@ -831,4 +973,25 @@ def im_com(image):
     
     return [x_com,y_com]
     
+def plot3dax():    
+    from mpl_toolkits.mplot3d import Axes3D
     
+    fig = plt.figure()
+    fig.set_size_inches(w=10,h=10)
+    ax = fig.add_subplot(111, projection='3d')
+
+    ax.set_xlim((-1.1,1.1))
+    ax.set_ylim((-1.1,1.1))
+    ax.set_zlim((-1.1,1.1))
+    
+    ax.set_xlabel('$J_{1}$')
+    ax.set_ylabel('$J_{2}$')
+    ax.set_zlabel('$J_{3}$')
+    
+    ax.plot([0,0],[0,0],[-1.3,1.3],'k-')
+    ax.plot([0,0],[-1.3,1.3],[0,0],'k-')
+    ax.plot([-1.3,1.3],[0,0],[0,0],'k-')
+    
+    ax.axis('equal')
+    
+    return ax
