@@ -103,24 +103,14 @@ for shape in testlist:
                     [Ixy, Iyy, Iyz],
                     [Ixz, Iyz, Izz]]
 
-
+    #Eigenvectors of inetia tensor are principle moments
     ow,ov = np.linalg.eig(Inertia_tensor)
+    #Sort by size
     eig_ord = np.argsort(ow)  # a thing to note is that here COLUMN i corrensponds to eigenvalue i.
 
-    w = ow[eig_ord]
-    v = ov[:, eig_ord].T
+    w = ow[eig_ord] #Principle moments
+    v = ov[:, eig_ord].T #Vectors
 
-    ord_vals=w
-    ord_vects=v
-
-    normalizer = np.sqrt(max(ord_vals) / Mtot)
-    norm_vals = np.sqrt(ord_vals / Mtot)
-    
-    start = com
-    ends = [[norm_vals[0] * ord_vects[0][0], norm_vals[0] * ord_vects[0][1], norm_vals[0] * ord_vects[0][2]],
-               [norm_vals[1] * ord_vects[1][0], norm_vals[1] * ord_vects[1][1], norm_vals[1] * ord_vects[1][2]],
-               [norm_vals[2] * ord_vects[2][0], norm_vals[2] * ord_vects[2][1], norm_vals[2] * ord_vects[2][2]]]
- 
     #Calulate J values
     I0=(2./5.)*Mtot*(((3.*Vtot)/(4.*np.pi))**(2./3.))
     J1, J2, J3 = (I0-w)/(I0+w)
@@ -144,22 +134,22 @@ for shape in testlist:
             bigax.plot([x], [y], [z],marker='s', color='b')
             print '======sym'
             if plot_text:
-                bigax.text(J1, (J1/J2)+0.05, (J1/J3)+0.05,"%i"%c,color='b', fontsize=12)
+                bigax.text(x, y+0.05, z+0.05,"%i"%c,color='b', fontsize=12)
         else:
             bigax.plot([x], [y], [z],marker='o', color='r')
             print '======oblate'
             if plot_text:
-                bigax.text(J1, (J1/J2)+0.05, (J1/J3)+0.05,"%i"%c,color='r', fontsize=12)
+                bigax.text(x, y+0.05, z+0.05,"%i"%c,color='r', fontsize=12)
     elif abs(J2-J3)<lim:
         bigax.plot([x], [y], [z],marker='^', color='g')
         print '=======prolate'
         if plot_text:
-                bigax.text(J1, (J1/J2)+0.05, (J1/J3)+0.05,"%i"%c,color='g', fontsize=12)
+                bigax.text(x, y+0.05, z+0.05,"%i"%c,color='g', fontsize=12)
     else:
         bigax.plot([x], [y], [z],marker='v', color='k')
         print '======tri'
         if plot_text:
-                bigax.text(J1, (J1/J2)+0.05, (J1/J3)+0.05,"%i"%c,color='k', fontsize=12)
+                bigax.text(x, y+0.05, z+0.05,"%i"%c,color='k', fontsize=12)
     
     print
     c+=1
