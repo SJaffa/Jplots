@@ -1,6 +1,6 @@
 filename	filename
 root        path/to/folder/forreading/andsaving
-mask_xmin	0
+mask_xmin	0 #pixel location for structure mask
 mask_xmax	-1
 mask_ymin	0
 mask_ymax	-1

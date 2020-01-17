@@ -10,7 +10,22 @@ import matplotlib.pyplot as plt
 from scipy.ndimage.measurements import center_of_mass as spcom
 
 def ColDens_13co(grid,dv):
-    #convert grid of brightness temp (PPV) to column density of 13CO (PP)
+    """
+    Convert grid of brightness temp (PPV) to column density of 13CO (PP)
+    
+    Parameters
+    ----------
+    grid : array_like
+        3D array of brightness temperature
+    dv :
+        velocity resolution
+
+    Returns
+    -------
+    N_CO : array_like
+        2D array of projected 13CO column density
+    """
+    
     T_ex = 25 #excitation temperature, K
     bracket = (1./(np.exp(10.6/T_ex)-1))-0.02
     bracket2 = (T_ex*np.exp(5.3/T_ex))/(1-np.exp(-10.6/T_ex))
