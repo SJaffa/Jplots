@@ -56,7 +56,7 @@ vols=[]
 ids=[]
 c=0
 for shape in testlist:
-    print shape,c
+    #print shape,c
     ids.append(c)
     
     #get test shape
@@ -115,7 +115,7 @@ for shape in testlist:
     I0=(2./5.)*Mtot*(((3.*Vtot)/(4.*np.pi))**(2./3.))
     J1, J2, J3 = (I0-w)/(I0+w)
     
-    print (J1, J2, J3)
+    #print (J1, J2, J3)
 
     J1s.append(J1)
     J2s.append(J2)
@@ -132,26 +132,26 @@ for shape in testlist:
     if abs(J1-J2)<lim:
         if abs(J2-J3)<lim:
             bigax.plot([x], [y], [z],marker='s', color='b')
-            print '======sym'
+            #print '======sym'
             if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='b', fontsize=12)
         else:
             bigax.plot([x], [y], [z],marker='o', color='r')
-            print '======oblate'
+            #print '======oblate'
             if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='r', fontsize=12)
     elif abs(J2-J3)<lim:
         bigax.plot([x], [y], [z],marker='^', color='g')
-        print '=======prolate'
+        #print '=======prolate'
         if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='g', fontsize=12)
     else:
         bigax.plot([x], [y], [z],marker='v', color='k')
-        print '======tri'
+        #print '======tri'
         if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='k', fontsize=12)
     
-    print
+    #print
     c+=1
     
 

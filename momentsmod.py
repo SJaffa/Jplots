@@ -11,7 +11,7 @@ from scipy.ndimage.measurements import center_of_mass as spcom
 
 def ColDens_13co(grid,dv):
     """
-    Convert grid of brightness temp (PPV) to column density of 13CO (PP)
+    Convert grid of brightness temp (PPV) to column density of 13CO (PP).
     
     Parameters
     ----------
@@ -43,6 +43,26 @@ def ColDens_13co(grid,dv):
     return N_CO
 
 def calculate_mass(grid,pix_pc,pix_vel):
+    """
+    Calucate mass of object (sum of pixel values).
+
+    Parameters
+    ----------
+    grid : array_like
+        3D array of brighness temperature
+    pix_pc : float
+        size in parsec of one spatial pixel
+    pix_vel : float
+        velocity width of one voxel
+    
+    Returns
+    ----------
+    mass : float
+        mass in kg
+    solar_mass : float
+        mass in solar masses
+    """
+    
     X=0.735 #Conversion factor from H2 mass to total mass
     mu_H2 =  3.35E-27 #Mass of hydrogen molecule in kg
     px_cm = pix_pc*3.1E18 #pixel width in cm
@@ -60,8 +80,24 @@ def calculate_mass(grid,pix_pc,pix_vel):
     return mass,solar_mass
     
 def make_grid_3d(l):
+    """
+    Make 3D density grid from astrodendro structure.
 
-    vel=l.indices()[0]  #velovity coordinates of structure
+    Parameters
+    ----------
+    l : astrodendro Structure instance
+
+    Returns
+    ----------
+    grid_2d : array_like
+        2D grid of projected density summed over velocity channels.
+    grid_3d : array_like
+        3D PPV grid of density
+    n : int
+        number of pixels in the structure
+    """
+
+    vel=l.indices()[0]  #velocity coordinates of structure
     x=l.indices()[1]    #x coordinates of structure
     y=l.indices()[2]    #y coordinates of structure
 
@@ -89,7 +125,20 @@ def make_grid_3d(l):
     return grid_2d,grid_3d,n
     
 def make_grid_2d(l):
+    """
+    Make 2D projected density grid from astrodendro structure.
 
+    Parameters
+    ----------
+    l : astrodendro Structure instance
+
+    Returns
+    ----------
+    grid : array_like
+        2D grid of projected density along axis 0
+    n : int
+        number of pixels in the structure
+    """
     x=l.indices()[0]    #x coordinates of structure
     y=l.indices()[1]    #y coordinates of structure
 
@@ -111,6 +160,27 @@ def make_grid_2d(l):
     return grid,n
 
 def justMST(x,y,z=[8]):
+    """
+    Calculate mMinimum Spanning Tree in 2 or 3 dimensions
+
+    Parameters
+    ----------
+    x : array
+        x-coordinate of points
+    y : array
+        y-coordinate of points
+    z : array, optional
+        z-coordinate of points if 3D
+
+    Returns
+    ----------
+    mst : array
+        Grid of distance values where indices are point index in coordinate array.
+        Zero-valued cells mean that edge is not on the MST
+    all_edges : array
+        Distances from all points to all other points, unsorted.
+    
+    """
     from scipy.sparse.csgraph import minimum_spanning_tree
     if len(z)==1: #2D data
         grid=np.zeros((len(x),len(y)))
@@ -138,11 +208,32 @@ def justMST(x,y,z=[8]):
         Tcsr = minimum_spanning_tree(grid,overwrite=True)
         mst=Tcsr.toarray().astype(float)
     else:
-        print "Error: x,y, and z must have the same length"
+        print("Error: x,y, and z must have the same length")
         quit()
     return mst, all_edges
 
 def plot_flat_mask(ax,d,idx,threedee,col='w'):
+    """
+    Plot mask of Structure over current axes.
+
+    Parameters
+    ----------
+    ax : matplotlib axes instance
+        Axes on wihch to plot
+    d : astrodendro Dendrogram instance
+        Dendrogram
+    idx : int
+        Index of structure to plot
+    threedee : boolean
+        True indicates 3D, False indicates 2D
+    col : string, optional
+        Matplotlib colour code to use when plotting mask contour.
+        Default is white: 'w'
+    
+    Returns
+    ----------
+    
+    """
     if threedee:
         mask_3d=d[idx].get_mask()
         mask_2d=np.sum(mask_3d,axis=0)
@@ -151,6 +242,31 @@ def plot_flat_mask(ax,d,idx,threedee,col='w'):
     ax.contour(mask_2d,colors=col,levels=[0])
 
 def single_structure_evolution(d,struct_id,nslices=20):
+    """
+    Take a single structure form the dendrogram and analyse it at several
+    logarithmically spaced intensity levels, plotting the resultant J values.
+
+    Parameters
+    ----------
+    d : astrodendro Dendrogram instance
+        Dendrogram from which toextract structure
+    struct_id : int
+        Index (id) od structure
+    nslices : int, optional
+        Number of logarithmically spaced intervals to analyse.
+        Default = 20            
+
+    Returns
+    ----------
+    j1s : array
+        J1 values
+    j2s : array
+        J2 values
+    I : float
+        maximum intensity analysed
+    fig : matplotlib Figure instance
+        Plot of changing J values
+    """
     import matplotlib.gridspec as gridspec
     from matplotlib.colors import LogNorm
     
@@ -189,7 +305,7 @@ def single_structure_evolution(d,struct_id,nslices=20):
     i=-1
     for I in intensities:
         i+=1
-        #print I
+        #print(I)
         
         #select above intensity cutoff
         levelgrid=np.zeros_like(grid)
@@ -222,6 +338,19 @@ def single_structure_evolution(d,struct_id,nslices=20):
     return j1s,j2s,I,fig
     
 def find_com_2d(grid):
+    """
+    Find the centre of mass of a 2D gridded shape.
+    
+    Parameters
+    ----------
+    grid: 2d array    
+    
+    Returns
+    ----------
+    com: 2 element array
+        The coordiantes in pixel number of the centre of mass
+    
+    """
     com=np.array([0,0])
     nx=grid.shape[0]
     ny=grid.shape[1]
@@ -233,6 +362,19 @@ def find_com_2d(grid):
     return com
 
 def find_com_3d(grid):
+    """
+    Find the centre of mass of a 3D gridded shape.
+    
+    Parameters
+    ----------
+    grid: 3d array    
+    
+    Returns
+    ----------
+    com: 3 element array
+        The coordiantes in pixel number of the centre of mass
+    
+    """
     com=np.array([0,0,0])
     nx, ny, nz=grid.shape[:]
 
@@ -245,30 +387,54 @@ def find_com_3d(grid):
     return com
 
 def check_dimensions(data):
-    print data.shape
+    """
+    Check dimensionality of an array and collapse if 1 or 0 dimensioned
+    Parameters
+    ----------
+    data :array
+        Array to check
+    
+    Returns
+    ----------
+    data: array
+        Array collapsed along any 0 or 1 dimensional axes
+    threedee: boolean
+        Flag is True if 3D, False if 2D
+    """
+    print(data.shape)
     if 0 in data.shape:
-        print "zero dimension"
+        print("zero dimension")
         i=0
         while data.shape[i]!=0:
             i+=1
         data=data.sum(axis=i)
-        print data.shape
+        print(data.shape)
     if 1 in data.shape:
-        print "one dimension"
+        print("one dimension")
         i=0
         while data.shape[i]!=1:
             i+=1
         data=data.sum(axis=i)
-        print data.shape
+        print(data.shape)
     if(len(np.shape(data))==3):
         threedee=True
-        print "3D"
+        print("3D")
     else:
         threedee=False
-        print "2D"
+        print("2D")
     return data,threedee
 
 def KDE_2D(structs,sig):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
 
     import scipy.stats
 
@@ -298,6 +464,16 @@ def KDE_2D(structs,sig):
 
 
 def ReadParameters(param_file):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
 
     type_of_var = {"filename":"str",
                    "root":"str",
@@ -327,13 +503,9 @@ def ReadParameters(param_file):
     
 
     with open(param_file) as f:
-
         for line in f:
-
-	    words = line.split()
-
+            words = line.split()
             try:
-            
                 var = type_of_var[words[0]]
                 
                 if(var=="str"):
@@ -343,16 +515,12 @@ def ReadParameters(param_file):
                 elif(var=="float"):
                     param[words[0]]=float(words[1])
                 else:
-
-                    print "The variable is neither a string, float or integer. I don't know how to deal with this"
+                    print("The variable is neither a string, float or integer. I don't know how to deal with this")
 
             except KeyError:
-
-                print "There is no such parameter. Add it to the type_of_var and param dictionaries"
-	    
+                print("There is no such parameter. Add it to the type_of_var and param dictionaries")
 
     f.close()
-
     return param
 
 
@@ -360,6 +528,16 @@ def ReadParameters(param_file):
 
     
 def filament_grid(xpix, ypix, nfils, fil_length, fil_width,seed=0):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     """
     nfils randomly oriented filaments of length fil_length and 
     aspect ratio fil_aspecton an xpix by ypix grid. 
@@ -386,6 +564,16 @@ def filament_grid(xpix, ypix, nfils, fil_length, fil_width,seed=0):
 
 
 def m11(grid,com):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     ny=grid.shape[1]
     dr11=0
 
@@ -398,6 +586,16 @@ def m11(grid,com):
 
 
 def m22(grid,com):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     nx=grid.shape[0]
     dr22=0
 
@@ -411,6 +609,16 @@ def m22(grid,com):
 
 
 def m12(grid,com):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     nx=grid.shape[0]
     ny=grid.shape[1]
     dr12=0
@@ -426,13 +634,32 @@ def m12(grid,com):
     return dr12
     
 def theta(M11,M22,M12):
-
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     th=0.5*np.arctan2((2*M12),(M11-M22))
 
     return th
     
 
 def i12(grid,com):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     M11=m11(grid,com)
     M22=m22(grid,com)
     M12=m12(grid,com)
@@ -450,6 +677,16 @@ def i12(grid,com):
     
 
 def moments_2d(g):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     com=spcom(g)
     Atot=np.count_nonzero(g)
     Mtot=np.sum(g)
@@ -463,6 +700,16 @@ def moments_2d(g):
     return II1,II2,com,t1
 
 def moments_3d(g):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     com=spcom(g)
     Atot=np.count_nonzero(g)
     Mtot=np.sum(g)
@@ -476,7 +723,16 @@ def moments_3d(g):
     return II1,II2,II3,com,t1
     
 def plot_interactive_axes(d,text=False,threedee=False):
+    """
     
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     f,bigax=plot_moments_axes(text=text)
     
     f.set_size_inches(12,6)
@@ -487,8 +743,18 @@ def plot_interactive_axes(d,text=False,threedee=False):
     #p = d.plotter()
     
     def onpick(event):
+        """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
         s = event.artist.get_gid()
-        print s
+        print(s)
         #p.plot_contour(dendax, structure=int(s), lw=3)
         plot_flat_mask(dendax,d,int(s),threedee)
     
@@ -497,6 +763,16 @@ def plot_interactive_axes(d,text=False,threedee=False):
     return bigax,dendax,f
     
 def plot_moments_axes(text=False):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     import matplotlib.pyplot as plt
     import matplotlib.patches as patches
        
@@ -534,6 +810,15 @@ def plot_moments_axes(text=False):
 
 def figure_wsc_GC(figure_number, fits_header):
     """
+    
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
     From Elizabeth Watkins.
     
     This function creates a figure with galactic co-ordinates
@@ -572,12 +857,32 @@ def find_coords(gal_lat,gal_lon):
     to FK5 coordinates.
     gal_lat = 'XXdXXmXXs'
     gal_lon = 'XXdXXmXXs'
+    
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
     """
+    
     from astropy.coordinates import SkyCoord
     rcw = SkyCoord(gal_lat,gal_lon, frame='galactic')
     return rcw.fk5
     
 def compute_dend(params, filename='',root='', data=[]):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     """
     If dend file already exists, read in.
     Else, compute and save dend.
@@ -593,16 +898,16 @@ def compute_dend(params, filename='',root='', data=[]):
                                                    params[2])
     
     if (os.path.isdir(dendfolder) and os.path.isfile("%s/dendrogram.fits"%dendfolder)):
-        print "Reading dend"
+        print("Reading dend")
         d = Dendrogram.load_from("%s/dendrogram.fits"%dendfolder)
     else:
-        print "Building dend"
+        print("Building dend")
         if len(data)>0:
             array=data
         elif len(filename)>0:
             array = fits.getdata('%s/%s.fits'%(root,filename))
         else:
-            print "Please specify a filename and root or data for 'compute_dend' function."
+            print("Please specify a filename and root or data for 'compute_dend' function.")
             return 0
         d = Dendrogram.compute(array, 
                                min_value=params[0],
@@ -618,6 +923,16 @@ def distance_to_fil(x,y):
     return (x+y)/np.sqrt(2)
     
 def testdata2d(n,shape='noisy'):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     # n is gridsize
     grid=np.zeros((n,n))
     if shape=='ellipse-cc':
@@ -775,6 +1090,16 @@ def testdata2d(n,shape='noisy'):
     return grid
 
 def ellipsoid(n,a,b,c):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     grid=np.zeros((n,n,n))
     cen=int(n/2.)
     for i in range(-cen,cen):
@@ -784,7 +1109,17 @@ def ellipsoid(n,a,b,c):
                     grid[i+cen,j+cen,k+cen]=1
     return grid
 
-def testdata3d(n,shape='sphere'):
+def testdata3d(n, shape='sphere'):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     # n is gridsize
     grid=np.zeros((n,n,n))
     if shape=='sphere':
@@ -944,6 +1279,16 @@ def testdata3d(n,shape='sphere'):
     return grid
 
 def small_3d_plot(ax,g):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     ax.set_xlim3d(0,g.shape[0])
     ax.set_ylim3d(0,g.shape[1])
     ax.set_zlim3d(0,g.shape[2])
@@ -955,6 +1300,16 @@ def small_3d_plot(ax,g):
                     ax.scatter([i],[j],[k],c='k',marker='.',alpha=0.1)
                     
 def image_moment(image, p, q, r=-1, dims=2):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     if dims==2:
         m = im_2d(image, p, q)
     elif dims==3:
@@ -966,18 +1321,48 @@ def image_moment(image, p, q, r=-1, dims=2):
     return m
         
 def im_2d(image,p,q):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     nx, ny = image.shape
     x_ind, y_ind = np.mgrid[:nx, :ny]
     moment=(image * x_ind**p * y_ind**q).sum()
     return moment
         
 def im_3d(image,p,q,r):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     nx, ny, nz = image.shape
     x_ind, y_ind, z_ind = np.mgrid[:nx, :ny, :nz]
     moment=(image * x_ind**p * y_ind**q * z_ind**r).sum()
     return moment
 
 def im_com(image):
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     #0th moment is summ of pixel values
     m00=image_moment(image,0,0)
     m10=image_moment(image,1,0)
@@ -988,7 +1373,17 @@ def im_com(image):
     
     return [x_com,y_com]
     
-def plot3dax():    
+def plot3dax():
+    """
+    
+    Parameters
+    ----------
+    
+    
+    Returns
+    ----------
+    
+    """
     from mpl_toolkits.mplot3d import Axes3D
     
     fig = plt.figure()

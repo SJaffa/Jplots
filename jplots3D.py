@@ -18,27 +18,30 @@ from astrodendro import Dendrogram
 
 #Read in data file to 3D numpy array
 print('....reading data')
-infile='./Data files and outputs/RUNI032_griddump.out'
+
 
 #data,header= fits.getdata('/home/sarah/Dropbox/PhDwork/170117Moments/SeamusFilaments/Data/PPV_Cubes/BinnedS2.fits',header=True)
 #data, header1 = fits.getdata('/home/sarah/Dropbox/PhDwork/170117Moments/SeamusFilaments/Data/PPP_Cubes/S2.fits',header=True)
 
-#data=np.loadtxt('/home/sarah/Dropbox/Herts/GandalfStuff/smallTurb/turbSmall.sf.00201_density_grid.dat',skiprows=19)
-#data=data.reshape((512,452,611))
-xind,yind,zind,val=np.loadtxt(infile,unpack=True)
+data=np.loadtxt('/home/sarah/Dropbox/Herts/GandalfStuff/smallTurb/turbSmall.sf.00201_density_grid.dat',skiprows=19)
+data=data.reshape((512,452,611))
 
-#Make into 3D array
-xarr=np.unique(xind)
-yarr=np.unique(yind)
-zarr=np.unique(zind)
 
-data=np.zeros((len(xarr), len(yarr), len(zarr)))
-n=0
-for i in range(len(xarr)):
-    for j in range(len(yarr)):
-        for k in range(len(zarr)):
-            data[i,j,k] = val[n]
-            n+=1
+#infile='./Data files and outputs/RUNI032_griddump.out'
+#xind,yind,zind,val=np.loadtxt(infile,unpack=True)
+#
+##Make into 3D array
+#xarr=np.unique(xind)
+#yarr=np.unique(yind)
+#zarr=np.unique(zind)
+#
+#data=np.zeros((len(xarr), len(yarr), len(zarr)))
+#n=0
+#for i in range(len(xarr)):
+#    for j in range(len(yarr)):
+#        for k in range(len(zarr)):
+#            data[i,j,k] = val[n]
+#            n+=1
 
 #%%
 #Compute dendrogram to segment image
