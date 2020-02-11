@@ -20,11 +20,11 @@ from astrodendro import Dendrogram
 print('....reading data')
 
 
-#data,header= fits.getdata('/home/sarah/Dropbox/PhDwork/170117Moments/SeamusFilaments/Data/PPV_Cubes/BinnedS2.fits',header=True)
+data,header= fits.getdata('/home/sarah/Dropbox/PhDwork/170117Moments/SeamusFilaments/Data/PPV_Cubes/BinnedS2.fits',header=True)
 #data, header1 = fits.getdata('/home/sarah/Dropbox/PhDwork/170117Moments/SeamusFilaments/Data/PPP_Cubes/S2.fits',header=True)
 
-data=np.loadtxt('/home/sarah/Dropbox/Herts/GandalfStuff/smallTurb/turbSmall.sf.00201_density_grid.dat',skiprows=19)
-data=data.reshape((512,452,611))
+#data=np.loadtxt('/home/sarah/Dropbox/Herts/GandalfStuff/smallTurb/turbSmall.sf.00201_density_grid.dat',skiprows=19)
+#data=data.reshape((512,452,611))
 
 
 #infile='./Data files and outputs/RUNI032_griddump.out'
@@ -47,10 +47,10 @@ data=data.reshape((512,452,611))
 #Compute dendrogram to segment image
 
 print('computing dend')
-d = Dendrogram.compute(data, 
-                          min_value=10**0.65,
-                          min_delta=5,
-                          min_npix=10)
+d = Dendrogram.compute(data)#, 
+                       #   min_value=10**0.65,
+                       #   min_delta=5,
+                       #   min_npix=10)
 
 d.viewer() #Dendrogram viewer (see astrodendro package for detalis)
 
@@ -73,7 +73,7 @@ vols=[]
 ids=[]
 c=0
 for shape in d.leaves:
-    print shape
+    print(shape)
     ids.append(shape.idx)
     
     #get pixel mask for structure
@@ -85,7 +85,7 @@ for shape in d.leaves:
     xt,yt,zt=shape.indices()
     g=gt[min(xt):max(xt)+1,min(yt):max(yt)+1,min(zt):max(zt)+1]
     #print min(xt),max(xt),min(yt),max(yt),min(zt),max(zt)
-    print g.shape
+    print(g.shape)
 
     com=spcom(g)
     Vtot=np.count_nonzero(g)
@@ -131,7 +131,7 @@ for shape in d.leaves:
     I0=(2./5.)*Mtot*(((3.*Vtot)/(4.*np.pi))**(2./3.))
     J1, J2, J3 = (I0-w)/(I0+w)
     
-    print (J1, J2, J3)
+    print(J1, J2, J3)
 
     J1s.append(J1)
     J2s.append(J2)
@@ -149,26 +149,26 @@ for shape in d.leaves:
     if abs(J1-J2)<lim:
         if abs(J2-J3)<lim:
             bigax.plot([x], [y], [z],marker='s', color='b')
-            print '======sym'
+            print('======sym')
             if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='b', fontsize=12)
         else:
             bigax.plot([x], [y], [z],marker='o', color='r')
-            print '======oblate'
+            print('======oblate')
             if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='r', fontsize=12)
     elif abs(J2-J3)<lim:
         bigax.plot([x], [y], [z],marker='^', color='g')
-        print '=======prolate'
+        print('=======prolate')
         if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='g', fontsize=12)
     else:
         bigax.plot([x], [y], [z],marker='v', color='k')
-        print '======tri'
+        print('======tri')
         if plot_text:
                 bigax.text(x, y+0.05, z+0.05,"%i"%c,color='k', fontsize=12)
     
-    print
+    print()
     c+=1
     
 
