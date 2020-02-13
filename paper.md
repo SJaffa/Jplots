@@ -23,7 +23,7 @@ affiliations:
  - name: I. Physikalisches Institut, Universit&auml;t zu K&ouml;ln
    index: 3
 date: 11 February 2020
-bibliography: paper.bib
+
 
 # Abstract
 
@@ -49,12 +49,4 @@ If the shape is centrally concentrated, such as a collapsing core, both principl
 
 The latest release of ``J plots`` now also allows analysis of 3D objects without projection. This is mainly inteded for the analysis of simulations in hteir native space, but can also be used for observations including velocity. In such a case we caution agains the blind interpretation of velocity as another dimension to be treated the same as spatial dimensions. One axis of the moment analysis can be confined to be along hte velocity axis to keep the types f dimensions separate, but this option is left up to the user as combining dimensions may provide some interesting insights, although will need much more thoughtful analysis to draw physically meaningful conclusions. This release is also updated to be Python 3 compatible.
 
-# Figures
 
-
-
-# Acknowledgements
-
-
-
-# References
