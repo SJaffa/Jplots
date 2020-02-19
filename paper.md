@@ -48,7 +48,7 @@ Molecular clouds are the birthplace of stars. In these chaotic environments, the
 
 # The J plots method
 
-The basics of the J plots method, as described in `@Jaffa, S. E.:2018`, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J momets are then defined as
+The basics of the J plots method, as described in `@2018Jaffa`, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J momets are then defined as
 
 $J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}
 
@@ -58,7 +58,7 @@ In two dimensions the reference shape is a filled circle of constant surface den
 
 ![Proof of concept of 2D J plots. The J values of several simple shapes are plotted, representing morphologies observed in molecular clouds. This demonstrates that distinct categories of shape are distributed in different regions on the J plot.](proof.pdf)
 
-``J plots`` has been used in 2D to analyse the shape of structures within simulated filaments. `@Clarke, S. D.:2018` examined the J values of sub-filaments (small elongated structures formed inside the main filament identified in 3D PPP and projected into 2D PP) and fibres (elongated structures inside the main filament identified observationally in PPV, then projected into the PP) and found that the PPV detected fibres did not represent the same gas as the PPP identified sub-filaments. Their distributions of J values showed that the shape of the structures recovered was changed by the nature of the observations, so observed velocity coherent structures should not be taken to represent physically separate objects.
+``J plots`` has been used in 2D to analyse the shape of structures within simulated filaments. `@2018Clarke` examined the J values of sub-filaments (small elongated structures formed inside the main filament identified in 3D PPP and projected into 2D PP) and fibres (elongated structures inside the main filament identified observationally in PPV, then projected into the PP) and found that the PPV detected fibres did not represent the same gas as the PPP identified sub-filaments. Their distributions of J values showed that the shape of the structures recovered was changed by the nature of the observations, so observed velocity coherent structures should not be taken to represent physically separate objects.
 
 ## J3D
 
