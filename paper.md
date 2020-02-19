@@ -24,8 +24,21 @@ affiliations:
    index: 3
 date: 11 February 2020
 bibliography: paper.bib
+---
+# Todo
 
-# Abstract
+Check spelling
+reference clumpfind
+Reference oter shape-finding codes
+Open source license
+Restructure code
+Acknowledge financial support
+Ongoing projects with J3D
+Installation instructions and dependencies
+3D example usage for testing
+Community guidelines: Are there clear guidelines for third parties wishing to 1) Contribute to the software 2) Report issues or problems with the software 3) Seek support
+
+Checklist: https://joss.readthedocs.io/en/latest/review_criteria.html
 
 # Summary
 
