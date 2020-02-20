@@ -48,9 +48,9 @@ Molecular clouds are the birthplace of stars. In these chaotic environments, the
 
 # The J plots method
 
-The basics of the J plots method, as described in `@Jaffa:2018`, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J momets are then defined as
+The basics of the J plots method, as described in @Jaffa:2018, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J momets are then defined as
 
-$J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}
+$J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}$
 
 ## The two-dimensional case
 
