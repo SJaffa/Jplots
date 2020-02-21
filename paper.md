@@ -48,9 +48,8 @@ Molecular clouds are the birthplace of stars. In these chaotic environments, the
 
 # The J plots method
 
-The basics of the J plots method, as described in @Jaffa:2018, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J momets are then defined as
-
-$J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}$
+The basics of the J plots method, as described in @Jaffa:2018, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J moments are then defined as
+$$J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}$$
 
 ## The two-dimensional case
 
@@ -69,21 +68,21 @@ In two dimensions the reference shape is a filled circle of constant surface den
 
 ## J3D
 
-The new release of ``J plots`` (called ``J3D`` now also allows analysis of 3D objects without projection. This is mainly inteded for the analysis of simulations in their native space, but can also be used for observations including velocity, as will be discussed later. In PPP space, the reference shape analogous to a uniform surface density circle becomes a uniform volume density sphere. From the point of view of moment of inertia we care about the projection on a uniform density sphere into two dimensions. Therefore in PPP,
+``J3D`` now also allows analysis of 3D objects without projection. This is mainly inteded for the analysis of simulations in their native space, but can also be used for observations including velocity, as will be discussed later. In PPP space, the reference shape analogous to a uniform surface density circle becomes a uniform volume density sphere. From the point of view of moment of inertia we care about the projection on a uniform density sphere into two dimensions. Therefore in PPP,
 
-$I_{0} = (2/5)*M*(3*V/4*np.pi)^{2/3}$,
+$I_{0} = \frac{2}{5}*M*(\frac{3V}{4\pi})^{2/3}$,
 
 where M is the mass of the structure (sum of pixel values) and V is the volume (number of pixels).
 
-Again, hollow shapes where the mas sis further from the centre than this reference shape will have all negative J values, centrally concentrated shapes will have all positive J values, and shapes that are elongated on one or two dimensions will have one or two positive J values and the others negative. In this case the deliniation between astrophysically relevant shapes is not as clear because most of hte shapes we often discuss are defined in obervations and therefore 2D, and the prevalence of filaments, oblate or prolate spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kind of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not well studied. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparrison of different studies.
+Again, hollow shapes where the mass is further from the centre than this reference shape will have all negative J values, centrally concentrated shapes will have all positive J values, and shapes that are elongated on one or two dimensions will have one or two positive J values and the others negative. In this case the deliniation between astrophysically relevant shapes is not as clear because most of hte shapes we often discuss are defined in obervations and therefore 2D, and the prevalence of filaments, oblate or prolate spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kind of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not well studied. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparrison of different studies.
 
 
 ### Velocity dimension 
-Real observations of molecular lines can provide information on the velocity along the line of sight of the emitting gas, and this can be analysed to understand the motion of the interstellar medium. Simulations also have velocity information,  In such a case we caution agains the blind interpretation of velocity as another dimension to be treated the same as spatial dimensions. One axis of the moment analysis can be confined to be along the velocity axis to keep the types f dimensions separate, but this option is left up to the user as combining dimensions may provide some interesting insights, although will need much more thoughtful analysis to draw physically meaningful conclusions. 
+Real observations of molecular lines can provide information on the velocity along the line of sight of the gas, and this can help us understand the motion of the interstellar medium. Simulations also have velocity information, so can theoretically be analysed in 6-dimensional PPPVVV, or in projected PPV space to be comparable to observations. In such a case we caution agains the blind interpretation of velocity as another dimension to be treated the same as spatial dimensions. One axis of the moment analysis can be confined to be along the velocity axis to keep the types of dimensions separate, but this option is left up to the user. Combining dimensions may provide some interesting insights, but will need much more thoughtful analysis to draw physically meaningful conclusions. 
 
 # Concluding remarks
 
-This release is also updated to be Python 3 compatible.
+We present ``J3D``, a code to quantify the three-dimensional strucutre of astrophysical objects in simulations or observations, based of the two-dimensional J plots. Comparing hte moment of inertia to a suitable reference shape separated hollo, centrally concentrated, elongated or elliptical shapes which may relate to important physical processes. Quantifying these shapes allows us to analyse and compare them in a statistical sense. The code is availale on [GitHub](https://github.com/SJaffa/Jplots). This release is also updated to be Python 3 compatible.
 
 # Figures
 
