@@ -56,10 +56,6 @@ $J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}$
 
 In two dimensions the reference shape is a filled circle of constant surface density, so $I_{0} = AM/4\pi$. If the shape is centrally concentrated, such as a collapsing core, both principle moments will be smaller than $I_{0}$ so both J values will be positive. For a hollow ring shape such as bubble blown in the cloud by stellar feedback, both rinciple moments will be greater than $I_{0}$ so both J values will be negative. For elongated shapes such as filaments, which are prevalent in molecular clouds, one moment will be larger and one smaller, so $J_{1}$ will be positive and $J_{2}$ will be negative. This gives us a simple diagnostic of these common shapes and allows us to place quantitative restrictions on shapes that fall between these categories.
 
-```{r proof, out.width="10%", fig.cap="An example image."}
-knitr::include_graphics("proof.pdf")
-```
-
 \begin{figure}
 \centering
 \includegraphics[width=0.5\linewidth]{proof}
