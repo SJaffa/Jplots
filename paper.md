@@ -27,16 +27,16 @@ bibliography: paper.bib
 ---
 # Todo
 
-Check spelling
-reference clumpfind
-Reference oter shape-finding codes
-Open source license
-Restructure code
-Acknowledge financial support
-Ongoing projects with J3D
-Installation instructions and dependencies
-3D example usage for testing
-Community guidelines: Are there clear guidelines for third parties wishing to 1) Contribute to the software 2) Report issues or problems with the software 3) Seek support
+Check spelling \\
+reference clumpfind \\
+Reference oter shape-finding codes\\
+Open source license\\
+Restructure code\\
+Acknowledge financial support\\
+Ongoing projects with J3D\\
+Installation instructions and dependencies\\
+3D example usage for testing\\
+Community guidelines: Are there clear guidelines for third parties wishing to 1) Contribute to the software 2) Report issues or problems with the software 3) Seek support\\
 
 Checklist: https://joss.readthedocs.io/en/latest/review_criteria.html
 
@@ -44,7 +44,7 @@ Checklist: https://joss.readthedocs.io/en/latest/review_criteria.html
 
 Molecular clouds are the birthplace of stars. In these chaotic environments, the interplay of gravity, pressure, turbulence, chemistry, radiation, heating and cooling, and feedback from young stars creates a wide variety of structures. We can observe these projected on the sky in two dimensions (position-position, PP), and also use chemical tracers to infer a velocity, which is often used as a third dimension to separate structures which are moving together and therefore assumed to be spatially related (position-position-velocity, PPV). We can also simulate many of these processes and create theoretical molecular clouds in two (PP) or three dimensions (PPP), and then use ur understanding of the physics and chemistry of the interstellar medium to create synthetic obvservations of these clouds, which can then be compared with real observations. In all of these studies the key is to be able to compare pixelated greyscale images in two or three spatial and velocity dimensions.
 
-``J plots`` is a tool to quantify the shape of 2D (PP) greyscale images using the moment of inertia. Written in Python, this allows users to import their data set from any format Python can understand (including the commonly used FITS format using the ``pyfits`` package) to make it into a numpy array and segment it using a method of their choice into meaningful structures (dendrograms are used in the example scripts, relying on the ``astrodendro`` package, but other techniques such as ``clumpfind`` or simple thresholding could equally be used). These structures can be individually or collectively analysed to reveal trends in their shape with environment, obervational or simulated constraints, or segmentation method. This allows astronomers to quantify these chaotic structures and compare them in a statistical sense.
+``J plots`` is a tool to quantify the shape of 2D (PP) greyscale images using the moment of inertia. Written in Python, this allows users to import their data set from any format Python can understand (including the commonly used FITS format using the [``pyfits`` package](https://pyfits.readthedocs.io/en/latest/)) to make it into a numpy array and segment it using a method of their choice into meaningful structures (dendrograms are used in the example scripts, relying on the ``astrodendro`` package, but other techniques such as ``clumpfind`` [@clumpfind] or simple thresholding could equally be used). These structures can be individually or collectively analysed to reveal trends in their shape with environment, obervational or simulated constraints, or segmentation method. This allows astronomers to quantify these chaotic structures and compare them in a statistical sense.
 
 # The J plots method
 
@@ -62,12 +62,10 @@ In two dimensions the reference shape is a filled circle of constant surface den
 ## J3D
 
 ``J3D`` now also allows analysis of 3D objects without projection. This is mainly inteded for the analysis of simulations in their native space, but can also be used for observations including velocity, as will be discussed later. In PPP space, the reference shape analogous to a uniform surface density circle becomes a uniform volume density sphere. From the point of view of moment of inertia we care about the projection on a uniform density sphere into two dimensions. Therefore in PPP,
-
-$I_{0} = \frac{2}{5}*M*(\frac{3V}{4\pi})^{2/3}$,
-
+$$I_{0} = \frac{2}{5}*M*(\frac{3V}{4\pi})^{2/3}$$,
 where M is the mass of the structure (sum of pixel values) and V is the volume (number of pixels).
 
-Again, hollow shapes where the mass is further from the centre than this reference shape will have all negative J values, centrally concentrated shapes will have all positive J values, and shapes that are elongated on one or two dimensions will have one or two positive J values and the others negative. In this case the deliniation between astrophysically relevant shapes is not as clear because most of hte shapes we often discuss are defined in obervations and therefore 2D, and the prevalence of filaments, oblate or prolate spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kind of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not well studied. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparrison of different studies.
+Again, hollow shapes where the mass is further from the centre than this reference shape will have all negative J values, centrally concentrated shapes will have all positive J values, and shapes that are elongated on one or two dimensions will have one or two positive J values and the others negative. In this case the deliniation between astrophysically relevant shapes is not as clear because most of the shapes we often discuss are defined in obervations and therefore 2D, and the prevalence of filaments, oblate or prolate spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kind of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not well studied. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparrison of different studies.
 
 
 ### Velocity dimension 
@@ -82,7 +80,7 @@ We present ``J3D``, a code to quantify the three-dimensional strucutre of astrop
 
 
 # Acknowledgements
-
+This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2019]
 
 
 # References
