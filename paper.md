@@ -49,7 +49,7 @@ Molecular clouds are the birthplace of stars. In these chaotic environments, the
 # The J plots method
 
 The basics of the J plots method, as described in @Jaffa:2018, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J moments are then defined as
-$$J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}$$
+$$J_{1...D} = I_{0} + \frac{I_{1...D}}{I_{0} - I_{1...D}}$$
 
 ## The two-dimensional case
 
@@ -62,7 +62,7 @@ In two dimensions the reference shape is a filled circle of constant surface den
 ## J3D
 
 ``J3D`` now also allows analysis of 3D objects without projection. This is mainly inteded for the analysis of simulations in their native space, but can also be used for observations including velocity, as will be discussed later. In PPP space, the reference shape analogous to a uniform surface density circle becomes a uniform volume density sphere. From the point of view of moment of inertia we care about the projection on a uniform density sphere into two dimensions. Therefore in PPP,
-$$I_{0} = \frac{2}{5}*M*(\frac{3V}{4\pi})^{2/3}$$,
+$$I_{0} = \frac{2}{5}*M*(\frac{3V}{4\pi})^{2/3},$$
 where M is the mass of the structure (sum of pixel values) and V is the volume (number of pixels).
 
 Again, hollow shapes where the mass is further from the centre than this reference shape will have all negative J values, centrally concentrated shapes will have all positive J values, and shapes that are elongated on one or two dimensions will have one or two positive J values and the others negative. In this case the deliniation between astrophysically relevant shapes is not as clear because most of the shapes we often discuss are defined in obervations and therefore 2D, and the prevalence of filaments, oblate or prolate spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kind of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not well studied. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparrison of different studies.
@@ -80,7 +80,7 @@ We present ``J3D``, a code to quantify the three-dimensional strucutre of astrop
 
 
 # Acknowledgements
-This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2019]
+This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/), Astropy [@astropy:2013; @astropy:2018] and Matplotlib [@Hunter:2007].
 
 
 # References
