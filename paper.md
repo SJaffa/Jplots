@@ -55,13 +55,6 @@ $$J_{1...D} = I_{0} + I_{1...D}/I_{0} - I_{1...D}$$
 
 In two dimensions the reference shape is a filled circle of constant surface density, so $I_{0} = AM/4\pi$. If the shape is centrally concentrated, such as a collapsing core, both principle moments will be smaller than $I_{0}$ so both J values will be positive. For a hollow ring shape such as bubble blown in the cloud by stellar feedback, both rinciple moments will be greater than $I_{0}$ so both J values will be negative. For elongated shapes such as filaments, which are prevalent in molecular clouds, one moment will be larger and one smaller, so $J_{1}$ will be positive and $J_{2}$ will be negative. This gives us a simple diagnostic of these common shapes and allows us to place quantitative restrictions on shapes that fall between these categories.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.5\linewidth]{proof}
-\caption{Proof of concept of 2D J plots. The J values of several simple shapes are plotted, representing morphologies observed in molecular clouds. This demonstrates that distinct categories of shape are distributed in different regions on the J plot.}
-\label{fig:foo}
-\end{figure}
-
 ![Proof of concept of 2D J plots. The J values of several simple shapes are plotted, representing morphologies observed in molecular clouds. This demonstrates that distinct categories of shape are distributed in different regions on the J plot.](proof.pdf)
 
 ``J plots`` has been used in 2D to analyse the shape of structures within simulated filaments. @Clarke:2018 examined the J values of sub-filaments (small elongated structures formed inside the main filament identified in 3D PPP and projected into 2D PP) and fibres (elongated structures inside the main filament identified observationally in PPV, then projected into the PP) and found that the PPV detected fibres did not represent the same gas as the PPP identified sub-filaments. Their distributions of J values showed that the shape of the structures recovered was changed by the nature of the observations, so observed velocity coherent structures should not be taken to represent physically separate objects.
