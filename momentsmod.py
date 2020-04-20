@@ -424,14 +424,18 @@ def check_dimensions(data):
         print("2D")
     return data,threedee
 
-def KDE_2D(structs,sig):
+def KDE_2D(structs,sig=0):
     """
-    
+    Use kernel density estimation to create a heatmap of points in 2D
     Parameters
     ----------
-    
-    
+    structs: list 
+        points coordinates
+    sig: float, optional
+        value to use for gaussian smoothing kernel
     Returns
+    k1: 2d array
+        density of points
     ----------
     
     """
@@ -1228,7 +1232,7 @@ def testdata3d(n, shape='sphere'):
                     
     elif shape=='ring-half':
         k=0
-        for i in range(n/2):
+        for i in range(int(n/2)):
             dx=i-(n/2.)
             for j in range(n):
                 dy=j-(n/2.)

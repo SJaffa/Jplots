@@ -168,7 +168,7 @@ np.savetxt('3d_testshapes.out',
            fmt='%i\t%7.5f\t%7.5f\t%7.5f\t%6f\t%i')
 
 #Tidy up 3D plot
-bigax.axis('equal')
+#bigax.axis('equal')
 bigax.set_xlim((-1.1,1.1))
 bigax.set_ylim((-1.1,1.1))
 bigax.xaxis.tick_top()
