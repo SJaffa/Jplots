@@ -25,33 +25,21 @@ affiliations:
 date: 11 February 2020
 bibliography: paper.bib
 ---
-# Todo
-
-Check spelling \\
-Reference oter shape-finding codes\\
-Open source license\\
-Acknowledge financial support\\
-Ongoing projects with J3D\\
-Installation instructions and dependencies\\
-3D example usage for testing\\
-Community guidelines: Are there clear guidelines for third parties wishing to 1) Contribute to the software 2) Report issues or problems with the software 3) Seek support\\
-
-Checklist: https://joss.readthedocs.io/en/latest/review_criteria.html
 
 # Summary
 
-Molecular clouds are the birthplace of stars. In these chaotic environments, the interplay of gravity, pressure, turbulence, chemistry, radiation, and feedback from young stars creates a wide variety of structures. We can observe these projected on the sky in two dimensions (position-position, PP), and also use chemical tracers to infer a velocity, which is often used as a third dimension (position-position-velocity, PPV) to separate structures which are moving towards or away from us at the same speed and are therefore assumed to be related. We can also simulate many of these processes and create theoretical molecular clouds in two (PP) or three dimensions (PPP), and then use our understanding of the physics and chemistry of the interstellar medium to create synthetic obvservations of these clouds, which can then be compared with real observations. In all of these studies a key step is to compare pixelated greyscale images in two or three dimensions.
+Molecular clouds are the birthplace of stars. In these chaotic environments, the interplay of gravity, pressure, turbulence, chemistry, radiation, and feedback from young stars creates a wide variety of structures. We can observe these projected on the sky in two dimensions (position-position, PP), and, using chemical tracers to infer a velocity (position-position-velocity, PPV), separate structures which are moving towards or away from us at the same speed and are therefore assumed to be related. We can also simulate many of these processes and create theoretical molecular clouds in two (PP) or three spatial dimensions (PPP), and then use our understanding of the physics and chemistry of the interstellar medium to create synthetic obvservations of these clouds, which can then be compared with real observations. In all of these studies a key step is to compare pixelated greyscale images in two or three dimensions.
 
-``J plots`` is a tool to quantify the shape of pixelated structures using the moment of inertia. Written in Python, this allows users to import their data set from any format Python can understand (including the commonly used FITS format using the [``pyfits`` package](https://pyfits.readthedocs.io/en/latest/)) to make it into a numpy array and segment it using a method of their choice into meaningful structures (dendrograms are used in the example scripts, relying on the ``astrodendro`` package, but other techniques such as ``clumpfind`` [@clumpfind] or simple thresholding could equally be used). These structures can be individually or collectively analysed with J plots in 2D or 3D to reveal trends in their shape with environment, obervational or simulated constraints, or segmentation method. This allows astronomers to quantify these chaotic structures and compare them in a statistical sense.
+``J plots`` is a tool to quantify the shape of pixelated structures using the moment of inertia. Written in Python, this allows users to import their data set from any format Python can understand (including the commonly used FITS format using the [``pyfits`` package](https://pyfits.readthedocs.io/en/latest/)) convert to a numpy array, and segment it using a method of their choice into meaningful structures (dendrograms are used in the example scripts, relying on the ``astrodendro`` package, but other techniques such as ``clumpfind`` [@clumpfind] or simple thresholding could equally be used). These structures can be individually or collectively analysed with J plots in 2D or 3D to reveal trends in their shape with environment, obervational or simulated constraints, or segmentation method. This allows astronomers to quantify these chaotic structures and compare them in a statistical sense.
 
 # The J plots method
 
-The basics of the 2D J plots method, as described in @Jaffa:2018, takes as input set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{1..D}$, where $D$ is the number of dimensions. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J moments are then defined as
-$$J_{1...D} = I_{0} + \frac{I_{1...D}}{I_{0} - I_{1...D}}$$
+The 2D J plots method, as described in @Jaffa:2018, takes as input a set of real-valued pixels representing a part of a greyscale image (called a 'structure'). For each structure, we calculate the area, $A$ (number of pixels), mass $M$ (sum of pixel values), centre of mass and principle moments of inertia, $I_{i}$. We also calculate what the moments would be for a reference shape of the same mass and area, $I_{0}$. The J moments are then defined as
+$$J_{i} = I_{0} + \frac{I_{i}}{I_{0} - I_{i}}$$
 
 ## The two-dimensional case
 
-In two dimensions the reference shape is a circle of constant surface density, so $I_{0} = AM/4\pi$. If the shape is centrally concentrated, such as a collapsing core, both principle moments will be smaller than $I_{0}$ so both J values will be positive. For a hollow ring shape such as bubble blown in the cloud by stellar feedback, both rinciple moments will be greater than $I_{0}$ so both J values will be negative. For elongated shapes such as filaments, which are prevalent in molecular clouds, one moment will be larger and one smaller, so $J_{1}$ will be positive and $J_{2}$ will be negative. This gives us a simple diagnostic of these common shapes and allows us to place quantitative restrictions on shapes that fall between these categories.
+In two dimensions the reference shape is a circle of constant surface density, so $I_{0} = AM/4\pi$. If the shape is centrally concentrated, such as a collapsing core, both principle moments will be smaller than $I_{0}$ so both J values will be positive. For a hollow ring shape such as bubble blown in the cloud by stellar feedback, both principle moments will be greater than $I_{0}$ so both J values will be negative. For elongated shapes such as filaments, which are prevalent in molecular clouds, one moment will be larger and one smaller, so $J_{1}$ will be positive and $J_{2}$ will be negative. This gives us a simple diagnostic of these common shapes and allows us to place quantitative restrictions on shapes that fall between these categories.
 
 ![Proof of concept of 2D J plots. The J values of several simple shapes are plotted, representing morphologies observed in molecular clouds. This demonstrates that distinct categories of shape are distributed in different regions on the J plot.](proof.pdf)
 
@@ -65,14 +53,14 @@ where M is the mass of the structure (sum of pixel values) and V is the volume (
 
 Again, hollow shapes where the mass is further from the centre than this reference shape will have $J_{1,2,3} < 0$, centrally concentrated shapes will have $J_{1,2,3} > 0$, and shapes that are elongated on one or two dimensions will have one or two positive J values and the others negative. These can be separated into oblate and prolate spheroids.
 
-In this case the deliniation between astrophysically relevant shapes is not as clear because most of the shapes we often discuss are defined in obervations and therefore 2D, and the prevalence of filaments, spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kind of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not common. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparrison.
+In this case the deliniation between astrophysically relevant shapes is not as clear because most of the shapes we often discuss are defined in obervations and therefore 2D, and the prevalence of filaments, spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kind of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not common. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparison of different theoretical stuudies.
 
 
 ### Velocity dimension 
 Real observations of molecular lines can provide information on the velocity of observed gas along the line of sight, and this can help us understand the motion of the interstellar medium. Simulations also have velocity information, so can theoretically be analysed in 6-dimensional PPPVVV, or in projected PPV space to be comparable to observations. In such a case we caution agains the blind interpretation of velocity as equivalent to a third spatial dimension, as studies have shown that things moving at the same speed may not be spatially colocated [@Clarke]. Combining spatial and velocity dimensions may provide some interesting insights, but will need much more thoughtful analysis to draw physically meaningful conclusions. 
 
 # Acknowledgements
-This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/), Astropy [@astropy:2013; @astropy:2018] and Matplotlib [@Hunter:2007].
+This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/), Astropy [@astropy:2013; @astropy:2018] and Matplotlib [@Hunter:2007]. This work was supperted by grant ST/R000905/1 from the UK Science and Technology Facilities Council and with the support of James Dale.
 
 
 # References
