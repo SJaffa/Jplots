@@ -766,7 +766,7 @@ def plot_interactive_axes(d,text=False,threedee=False):
     
     return bigax,dendax,f
     
-def plot_moments_axes(text=False):
+def plot_moments_axes(ax,text=False):
     """
     
     Parameters
@@ -781,35 +781,32 @@ def plot_moments_axes(text=False):
     import matplotlib.patches as patches
        
     plt.rcParams.update({'font.size': 18, 'font.family':'serif','text.usetex':False})
+
+    ax.axis('equal')
+    ax.set_xlim((-1.1,1.1))
+    ax.set_ylim((-1.1,1.1))
+    ax.xaxis.tick_top()
+    ax.grid()
     
-    f=plt.figure()
-    
-    bigax=plt.gca()
-    bigax.axis('equal')
-    bigax.set_xlim((-1.1,1.1))
-    bigax.set_ylim((-1.1,1.1))
-    bigax.xaxis.tick_top()
-    bigax.grid()
-    
-    bigax.vlines(0,-1.3,1.3)
-    bigax.hlines(0,-1.3,1.3)
+    ax.vlines(0,-1.3,1.3)
+    ax.hlines(0,-1.3,1.3)
     
    
-    bigax.add_patch(patches.Rectangle((-1.0, -1.0),1,1,alpha=0.2,color='b'))
-    bigax.add_patch(patches.Rectangle((0.0, 0.0),1,1,alpha=0.2,color='y'))
-    bigax.add_patch(patches.Rectangle((0.0, -1.0),1,1,alpha=0.2,color='r'))
+    ax.add_patch(patches.Rectangle((-1.0, -1.0),1,1,alpha=0.2,color='b'))
+    ax.add_patch(patches.Rectangle((0.0, 0.0),1,1,alpha=0.2,color='y'))
+    ax.add_patch(patches.Rectangle((0.0, -1.0),1,1,alpha=0.2,color='r'))
     #bigax.add_patch(patches.Rectangle((0.0, -0.5),0.5,0.5,alpha=0.1,color='r'))
     
     if text:
         fs=16
-        bigax.text(0.1,0.8,'Centrally concentrated',color='y',fontsize=fs)
-        bigax.text(-0.9,-0.9,'Shell',color='b',fontsize=fs)
-        bigax.text(0.5,-0.9,'Filament',color='r',fontsize=fs)
+        ax.text(0.1,0.8,'Centrally concentrated',color='y',fontsize=fs)
+        ax.text(-0.9,-0.9,'Bubble',color='b',fontsize=fs)
+        ax.text(0.5,-0.9,'Filament',color='r',fontsize=fs)
     
-    bigax.set_xlabel(r'$J_{1}$')
-    bigax.set_ylabel(r'$J_{2}$')
-    bigax.xaxis.set_label_position('top')
-    return f, bigax
+    ax.set_xlabel(r'$J_{1}$')
+    ax.set_ylabel(r'$J_{2}$')
+    ax.xaxis.set_label_position('top')
+    return ax
     
 
 def figure_wsc_GC(figure_number, fits_header):

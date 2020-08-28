@@ -11,11 +11,16 @@ This code is able to separate centrally concentrated structures
 structures (bubbles) from the main population of ‘slightly
 irregular blobs’ that make up most astronomical images.
 
-This can be applied to any 2D greyscale image (single
+This can be applied to any 2D greyscale pixelated image (single
 wavelength/tracer or column density).
 
-The main file is jplots.py which uses the example_Params.txt file
-to set up analyse the HiGAL tile descibed in the paper.
+Examples of the usage of J plots are given in the tests folder:
+
+| File                | Description                                                                                                                                   | Inputs  | Outputs   |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+| proof_of_concept.py | Uses a set of simple test shapes demonstrate the capacity to separate centrally concentrated shapes from elongated shapes from hollow shapes. | | proof.pdf |
+| j2d_basic_example.py | Reading in 2D data from a fits file, segmenting the image into regions of interest, calculating, plotting and saving J values | nh2C_mosaic341352.fits | nh2C_mosaic341352.jvals, nh2C_mosaic341352_jplot.pdf
+|                     |                                                                                                                                               |           |
 
 This reads in the specified parameters file, builds a 
 dendrogram, and analyses all the structures. It outputs
@@ -24,8 +29,8 @@ analysing multiple files it creates a plot of all the structures
 from all the files.
 
 A full description of this algorithm, the proof of concept 
-tests, and some example astronomical applications are described 
-in the paper. A PDF is included in this repository or can be 
+tests, and example astronomical applications are described 
+in the paper. A PDF is included in the docs folder or can be 
 found on arXiv at https://arxiv.org/abs/1803.01640
 
 # J3D (3D)
