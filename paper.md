@@ -27,9 +27,7 @@ bibliography: paper.bib
 ---
 # Todo
 
-Check spelling \\
 Open source license\\
-Restructure code\\
 Acknowledge financial support\\
 Installation instructions and dependencies\\
 3D example usage for testing\\
@@ -51,7 +49,7 @@ $$J_{i} = \frac{I_{0} + I_{i}}{I_{0} - I_{i}}, \hspace{2cm} i=1, 2, 3.$$
 
 In two dimensions the reference shape is a filled circle of constant surface density, so $I_{0} = AM/4\pi$. If the shape is centrally concentrated, such as a collapsing core, both principle moments will be smaller than $I_{0}$ so both J values will be positive. For a hollow ring shape such as bubble blown in the cloud by stellar feedback, both principal moments will be greater than $I_{0}$ so both J values will be negative. For elongated shapes such as filaments, which are prevalent in molecular clouds, one moment will be larger and one smaller, so $J_{1}$ will be positive and $J_{2}$ will be negative. This gives us a simple diagnostic of these common shapes and allows us to place quantitative restrictions on shapes that fall between these categories.
 
-![Proof of concept of 2D J plots. The J values of several simple shapes are plotted, representing morphologies observed in molecular clouds. This demonstrates that distinct categories of shape are distributed in different regions on the J plot.](docs/proof.pdf)
+![Proof of concept of 2D J plots. The J values of several simple shapes are plotted, representing morphologies observed in molecular clouds. This demonstrates that distinct categories of shape are distributed in different regions on the J plot.](tests/proof.pdf)
 
 ``J plots`` has been used in 2D to analyse the shape of structures within simulated filaments. @Clarke:2018 examined the J values of sub-filaments (small elongated structures formed inside the main filament identified in 3D PPP and projected into 2D PP) and fibres (elongated structures inside the main filament identified observationally in PPV, then projected into the PP) and found that the PPV detected fibres did not represent the same gas as the PPP identified sub-filaments. Their distributions of J values showed that the shape of the structures recovered was changed by the nature of the observations, so observed velocity coherent structures should not be taken to represent physically separate objects.
 
@@ -71,12 +69,8 @@ Real observations of molecular lines can provide information on the velocity alo
 
 We present ``J3D``, a code to quantify the three-dimensional structure of astrophysical objects in simulations or observations, based on the two-dimensional J plots. Comparing the moment of inertia to a suitable reference shape separated hollow, centrally concentrated, elongated or elliptical shapes which may relate to important physical processes. Quantifying these shapes allows us to analyse and compare them in a statistical sense. The code is available on [GitHub](https://github.com/SJaffa/Jplots). This release is also updated to be Python 3 compatible.
 
-# Figures
-
-
-
 # Acknowledgements
-This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2019]
+This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2019]. SEJ gratefully acknowledges support from the STFC grant number ST/R000905/1. APW gratefully acknowledges the support of the consolidated grant ST/K00926/1 from the UK Science and Technology Facilities Council, and of the EU-funded VIALACTEA NetworkFP7-SPACE-607380. SDC acknowledges support from the ERC starting grant no. 679852 ‘RADFEEDBACK’.
 
 
 # References
