@@ -63,7 +63,7 @@ Real observations of molecular lines can provide information on the velocity alo
 We present ``J3D``, a code to quantify the three-dimensional structure of astrophysical objects in simulations or observations, based on the two-dimensional J plots. Comparing the moment of inertia to a suitable reference shape separated hollow, centrally concentrated, elongated or elliptical shapes which may relate to important physical processes. Quantifying these shapes allows us to analyse and compare them in a statistical sense. The code is available on [GitHub](https://github.com/SJaffa/Jplots). This release is also updated to be Python 3 compatible.
 
 # Acknowledgements
-This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2019]. SEJ gratefully acknowledges support from the STFC grant number ST/R000905/1. APW gratefully acknowledges the support of the consolidated grant ST/K00926/1 from the UK Science and Technology Facilities Council, and of the EU-funded VIALACTEA NetworkFP7-SPACE-607380. SDC acknowledges support from the ERC starting grant no. 679852 ‘RADFEEDBACK’.
+This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2018]. SEJ gratefully acknowledges support from the STFC grant number ST/R000905/1. APW gratefully acknowledges the support of the consolidated grant ST/K00926/1 from the UK Science and Technology Facilities Council, and of the EU-funded VIALACTEA NetworkFP7-SPACE-607380. SDC acknowledges support from the ERC starting grant no. 679852 ‘RADFEEDBACK’.
 
 
 # References
