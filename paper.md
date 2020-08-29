@@ -16,11 +16,11 @@ authors:
     orcid: 0000-0001-9751-4603
     affiliation: 3
 affiliations:
- - name: Centre for Astrophysics Research, University of Hertfordshire
+ - name: Centre for Astrophysics Research, University of Hertfordshire, Hatfield, AL10 9AB, UK
    index: 1
- - name: Cardiff University
+ - name: School of Physics and Astronomy, Cardiff University, The Parade, Cardiff, CF24 3AA, UK
    index: 2
- - name: I. Physikalisches Institut, Universit&auml;t zu K&ouml;ln
+ - name: I. Physikalisches Institut, Universit&auml;t zu K&ouml;ln, Z&uuml;lpicher Str. 77, D-50937 K&ouml;ln, Germany
    index: 3
 date: 11 February 2020
 bibliography: paper.bib
@@ -63,7 +63,7 @@ Real observations of molecular lines can provide information on the velocity alo
 We present ``J3D``, a code to quantify the three-dimensional structure of astrophysical objects in simulations or observations, based on the two-dimensional J plots. Comparing the moment of inertia to a suitable reference shape separated hollow, centrally concentrated, elongated or elliptical shapes which may relate to important physical processes. Quantifying these shapes allows us to analyse and compare them in a statistical sense. The code is available on [GitHub](https://github.com/SJaffa/Jplots). This release is also updated to be Python 3 compatible.
 
 # Acknowledgements
-This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2018]. SEJ gratefully acknowledges support from the STFC grant number ST/R000905/1. APW gratefully acknowledges the support of the consolidated grant ST/K00926/1 from the UK Science and Technology Facilities Council, and of the EU-funded VIALACTEA NetworkFP7-SPACE-607380. SDC acknowledges support from the ERC starting grant no. 679852 ‘RADFEEDBACK’.
+This research made use of astrodendro, a Python package to compute dendrograms of Astronomical data (http://www.dendrograms.org/) and Astropy [@astropy:2013; @astropy:2018]. SEJ gratefully acknowledges support from the STFC grant number ST/R000905/1. APW gratefully acknowledges the support of a Consolidated Grant (ST/K00926/1) from the UK Science andTechnology Facilities Council (STFC). SDC acknowledges support from the ERC starting grant no. 679852 ‘RADFEEDBACK’.
 
 
 # References
