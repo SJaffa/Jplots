@@ -25,14 +25,6 @@ affiliations:
 date: 11 February 2020
 bibliography: paper.bib
 ---
-# Todo
-
-Open source license\\
-Acknowledge financial support\\
-Installation instructions and dependencies\\
-3D example usage for testing\\
-
-Checklist: https://joss.readthedocs.io/en/latest/review_criteria.html
 
 # Summary
 
@@ -56,11 +48,12 @@ In two dimensions the reference shape is a filled circle of constant surface den
 ## J3D
 
 ``J3D`` now also allows analysis of 3D objects without projection. This is mainly intended for the analysis of simulations in their native space, but can also be used for observations including velocity, as will be discussed later. In PPP space, the reference shape analogous to a uniform surface density circle becomes a uniform volume density sphere. For the moment of inertia, we care about the projection on a uniform density sphere into two dimensions. Therefore in PPP,
-$$I_{0} = \frac{2}{5}*M*(\frac{3V}{4\pi})^{2/3}$$,
+$$I_{0} = \frac{2}{5}*M*(\frac{3V}{4\pi})^{2/3},$$
 where M is the mass of the structure (sum of pixel values) and V is the volume (number of pixels).
 
 Again, hollow shapes where the mass is further from the centre than this reference shape will have all negative J values, centrally concentrated shapes will have all positive J values, and shapes that are elongated on one or two dimensions will have one or two positive J values and the others negative. In this case, the delineation between astrophysically relevant shapes is not as clear because most of the shapes we often discuss are defined in observations and therefore 2D, and the prevalence of filaments, oblate or prolate spheroids, and thin sheet-like structures is only discussed theoretically or in simulations. Algorithms to identify these kinds of shapes and studies of their relevance to astrophysical phenomena (such as turbulence, feedback, gravitational collapse, etc) are not well studied. We believe J3D meets an important need for robust quantification of 3D structures in simulations to enable statistical comparison of different studies.
 
+![Proof of concept of J3D. The J values of a sample of simple shapes are plotted, showing how they are seaprated and classified. This plot can be generated to be explored in more detail using the example scripts included in the GitHub repository.](tests/proof3D.pdf)
 
 ### Velocity dimension 
 Real observations of molecular lines can provide information on the velocity along the line of sight of the gas, and this can help us understand the motion of the interstellar medium. Simulations also have velocity information, so can theoretically be analysed in 6-dimensional PPPVVV, or in projected PPV space to be comparable to observations. In such a case we caution against the blind interpretation of velocity as another dimension to be treated the same as spatial dimensions. One axis of the moment analysis can be confined to be along the velocity axis to keep the types of dimensions separate, but this option is left up to the user. Combining dimensions may provide some interesting insights, but will need much more thoughtful analysis to draw physically meaningful conclusions. 
