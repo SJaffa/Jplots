@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 Created on Fri Feb 17 10:45:04 2017
@@ -737,7 +736,10 @@ def plot_interactive_axes(d,text=False,threedee=False):
     ----------
     
     """
-    f,bigax=plot_moments_axes(text=text)
+    f=plt.figure()
+    jax=plt.gca()
+    
+    jax=plot_moments_axes(jax,text=text)
     
     f.set_size_inches(12,6)
     
@@ -764,7 +766,7 @@ def plot_interactive_axes(d,text=False,threedee=False):
     
     f.canvas.mpl_connect('pick_event', onpick)
     
-    return bigax,dendax,f
+    return jax,dendax,f
     
 def plot_moments_axes(ax,text=False):
     """
