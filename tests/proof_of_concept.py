@@ -6,7 +6,6 @@ Created on Thu Jul 27 17:09:25 2017
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import matplotlib.patches as patches
 import momentsmod as mm
 
 testlist = [#'diag-fil','diag-fil2',

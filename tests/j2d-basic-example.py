@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
+Example of J plots analysis on observed data
+
 Created on Tue May 26 14:56:24 2020
 
 @author: Sarah Jaffa

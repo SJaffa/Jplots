@@ -1,5 +1,5 @@
 """
-Example script for a simple Jplots analysis
+Example script for a simple J3D analysis
 
 """
 import numpy as np
