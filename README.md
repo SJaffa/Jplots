@@ -1,49 +1,58 @@
-# Jplots
+## J plots and J3D
 
-#============================================================
-SUMMARY
-#============================================================
+We can use the principal moments of inertia of a shape to
+classify astronomically ineresting structures in 2D (J plots) and 3D (J3D).
 
-
-We can separate structures in a 2D image using dendrograms 
-(https://dendrograms.readthedocs.io/en/stable/) and then 
-use the principal moment of inertia of these structures to
-classify their shapes.
+# J plots (2D)
 
 This code is able to separate centrally concentrated structures
 (cores), elongated structures (filaments) and hollow circular
 structures (bubbles) from the main population of ‘slightly
 irregular blobs’ that make up most astronomical images.
 
-This can be applied to any 2D greyscale image (single
+This can be applied to any 2D greyscale pixelated image (single
 wavelength/tracer or column density).
 
+Examples of the usage of J plots are given in the tests folder.
 
-#============================================================
-USAGE
-#============================================================
+A full description of this algorithm, the proof of concept 
+tests, and example astronomical applications are described 
+in the paper. A PDF is included in the docs folder or can be 
+found on arXiv at https://arxiv.org/abs/1803.01640
 
-The main file is jplots.py which uses the example_Params.txt file
-to set up analyse the HiGAL tile descibed in the paper.
+# J3D (3D)
 
-This reads in the specified parameters file, builds a 
-dendrogram, and analyses all the structures. It outputs
-an interactive J plot and image of the data, and if you are 
-analysing multiple files it creates a plot of all the structures 
-from all the files.
+This code is able to separate centrally concentrated structures, 
+elongated structures (filaments), hollow structures, and prolate/oblate 
+spheroids.
+
+This can be applied to any 3D greyscale data cube (single
+wavelength/tracer or column density in PPP or PPV).
 
 It should be pretty simple to run this code and get the plots 
 out, but if you want to do anything more complicated please
 contact the authors on s.jaffa@herts.ac.uk.
 
-Thanks!
-
-
-#============================================================
-PAPER
-#============================================================
-
 A full description of this algorithm, the proof of concept 
 tests, and some example astronomical applications are described 
-in the paper. A PDF is included in this repository or can be 
-found on arXiv at https://arxiv.org/abs/1803.01640
+in the paper which is currently in preparation.
+
+# Installing and running
+
+This code is written in Python 3 (so should also run in Python 2). It requires the following libraries:
+
+- numpy
+- scipy
+- matplotlib
+- astropy (optional, for reading fits files in example scripts)
+- astrodendro (optional, for image segmentation in example scripts)
+
+The scripts included in the 'tests' folder give basic examples of how to use J plots and J3D on common types of astronomical data. The input and output files are included so you can test the code yourself, or modify these examples to analyse your own data.
+
+# Editing and contributing
+
+If you wish to use the code as it is to analyse your own work, please cite the relevant papers in your publication. If you wish to edit the code, expand it with new features, point out bugs or suggest improvements please contact the authors either by email or through the GitHub issue tracking page. This code is shared under the GNU GPLv3 license. For further detail please see the LICENSE file.
+
+If you need help running the code or interpreting your results, we would be happy to collaborate!
+
+

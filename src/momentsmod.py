@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 Created on Fri Feb 17 10:45:04 2017
@@ -8,121 +7,6 @@ Created on Fri Feb 17 10:45:04 2017
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage.measurements import center_of_mass as spcom
-
-def ColDens_13co(grid,dv):
-    """
-    Convert grid of brightness temp (PPV) to column density of 13CO (PP).
-    
-    Parameters
-    ----------
-    grid : array_like
-        3D array of brightness temperature
-    dv :
-        velocity resolution
-
-    Returns
-    -------
-    N_CO : array_like
-        2D array of projected 13CO column density
-    """
-    
-    T_ex = 25 #excitation temperature, K
-    bracket = (1./(np.exp(10.6/T_ex)-1))-0.02
-    bracket2 = (T_ex*np.exp(5.3/T_ex))/(1-np.exp(-10.6/T_ex))
-    #print bracket, bracket2
-    N_CO=np.zeros((grid.shape[1],grid.shape[2]))
-    
-    for i in range(grid.shape[1]):
-        for j in range(grid.shape[2]):
-            tau_int=0
-            for k in range(grid.shape[0]):
-                #if grid[i,j,k]>0:
-                tau_int += (-np.log(1 - (grid[k,i,j]/10.6)*(bracket**-1)))*dv
-            #print tau_int
-            N_CO[i,j] = 1.51E14*bracket2*tau_int
-    return N_CO
-
-def calculate_mass(grid,pix_pc,pix_vel):
-    """
-    Calucate mass of object (sum of pixel values).
-
-    Parameters
-    ----------
-    grid : array_like
-        3D array of brighness temperature
-    pix_pc : float
-        size in parsec of one spatial pixel
-    pix_vel : float
-        velocity width of one voxel
-    
-    Returns
-    ----------
-    mass : float
-        mass in kg
-    solar_mass : float
-        mass in solar masses
-    """
-    
-    X=0.735 #Conversion factor from H2 mass to total mass
-    mu_H2 =  3.35E-27 #Mass of hydrogen molecule in kg
-    px_cm = pix_pc*3.1E18 #pixel width in cm
-    A_px_cm = px_cm**2 #pixel area, in cm^2
-    
-    #print px_cm,A_px_cm
-    N_13co = ColDens_13co(grid,pix_vel)
-    #print N_13co
-                
-    N_H2 = 6.5E5 * N_13co
-    m_H2 = mu_H2*np.sum(N_H2) * A_px_cm
-    
-    mass = m_H2/X #mass in kg
-    solar_mass=mass/(1.99E30)
-    return mass,solar_mass
-    
-def make_grid_3d(l):
-    """
-    Make 3D density grid from astrodendro structure.
-
-    Parameters
-    ----------
-    l : astrodendro Structure instance
-
-    Returns
-    ----------
-    grid_2d : array_like
-        2D grid of projected density summed over velocity channels.
-    grid_3d : array_like
-        3D PPV grid of density
-    n : int
-        number of pixels in the structure
-    """
-
-    vel=l.indices()[0]  #velocity coordinates of structure
-    x=l.indices()[1]    #x coordinates of structure
-    y=l.indices()[2]    #y coordinates of structure
-
-    v=l.values()        #pixel values of structure
-    n=l.get_npix()      #number of pixels
-    
-
-    xmax=np.amax(x)+1   #coordinates of bounding box
-    ymax=np.amax(y)+1
-    xmin=np.amin(x)-1
-    ymin=np.amin(y)-1
-    vmin=np.amin(vel)-1
-    vmax=np.amax(vel)+1
-
-    #make empty grid
-    grid_3d=np.zeros((vmax-vmin,xmax-xmin,ymax-ymin))
-
-    #populate 3d grid
-    for j in range(n):
-        grid_3d[vel[j]-vmin,x[j]-xmin,y[j]-ymin]=v[j]
-        
-    #integrate velocity axis for 2d grid
-    grid_2d=np.sum(grid_3d,axis=0)
-        
-    return grid_2d,grid_3d,n
     
 def make_grid_2d(l):
     """
@@ -159,58 +43,7 @@ def make_grid_2d(l):
         
     return grid,n
 
-def justMST(x,y,z=[8]):
-    """
-    Calculate mMinimum Spanning Tree in 2 or 3 dimensions
 
-    Parameters
-    ----------
-    x : array
-        x-coordinate of points
-    y : array
-        y-coordinate of points
-    z : array, optional
-        z-coordinate of points if 3D
-
-    Returns
-    ----------
-    mst : array
-        Grid of distance values where indices are point index in coordinate array.
-        Zero-valued cells mean that edge is not on the MST
-    all_edges : array
-        Distances from all points to all other points, unsorted.
-    
-    """
-    from scipy.sparse.csgraph import minimum_spanning_tree
-    if len(z)==1: #2D data
-        grid=np.zeros((len(x),len(y)))
-        all_edges=[]
-        for i in range(len(x)):
-          for j in range(len(x)):
-            if i!=j:
-              if grid[j][i]==0:
-                grid[i][j]=np.sqrt((x[i]-x[j])**2+(y[i]-y[j])**2)
-                all_edges.append(grid[i][j])   
-        Tcsr = minimum_spanning_tree(grid,overwrite=True)
-        mst=Tcsr.toarray().astype(float)
-    
-    elif len(z)==len(x):
-        length=len(x)
-        grid=np.zeros((length,length))
-        all_edges=[]
-        for i in range(length):
-          for j in range(length):
-            if i!=j:
-              if grid[j][i]==0:
-                grid[i][j]=np.sqrt((x[i]-x[j])**2+(y[i]-y[j])**2+(z[i]-z[j])**2)
-                all_edges.append(grid[i][j])   
-        #make mst
-        Tcsr = minimum_spanning_tree(grid,overwrite=True)
-        mst=Tcsr.toarray().astype(float)
-    else:
-        print("Error: x,y, and z must have the same length")
-        quit()
-    return mst, all_edges
 
 def plot_flat_mask(ax,d,idx,threedee,col='w'):
     """
@@ -336,55 +169,6 @@ def single_structure_evolution(d,struct_id,nslices=20):
     bigax.legend(loc='lower right')
     
     return j1s,j2s,I,fig
-    
-def find_com_2d(grid):
-    """
-    Find the centre of mass of a 2D gridded shape.
-    
-    Parameters
-    ----------
-    grid: 2d array    
-    
-    Returns
-    ----------
-    com: 2 element array
-        The coordiantes in pixel number of the centre of mass
-    
-    """
-    com=np.array([0,0])
-    nx=grid.shape[0]
-    ny=grid.shape[1]
-    for i in range(nx):
-        for j in range(ny):
-            com =com + grid[i,j]*np.array([i,j])
-    com=com/np.sum(grid)
-
-    return com
-
-def find_com_3d(grid):
-    """
-    Find the centre of mass of a 3D gridded shape.
-    
-    Parameters
-    ----------
-    grid: 3d array    
-    
-    Returns
-    ----------
-    com: 3 element array
-        The coordiantes in pixel number of the centre of mass
-    
-    """
-    com=np.array([0,0,0])
-    nx, ny, nz=grid.shape[:]
-
-    for i in range(nx):
-        for j in range(ny):
-            for k in range(nz):
-                com =com + grid[i,j, k]*np.array([i,j, k])
-    com=com/np.sum(grid)
-
-    return com
 
 def check_dimensions(data):
     """
@@ -424,156 +208,10 @@ def check_dimensions(data):
         print("2D")
     return data,threedee
 
-def KDE_2D(structs,sig):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-
-    import scipy.stats
-
-    ns = len(structs[:,0])
-
-    g = np.zeros((2,ns))
-
-    g[0,:] = structs[:,1]
-    g[1,:] = structs[:,2]
-
-    kde = scipy.stats.gaussian_kde(g,bw_method="scott")
-    #kde2 = scipy.stats.gaussian_kde(g,bw_method="silverman")
-    #kde3 = scipy.stats.gaussian_kde(g,bw_method=sig)
-
-    x,y = np.mgrid[-1.0:1.0:1000j,-1.0:1.0:1000j]
-    p = np.vstack([x.ravel(),y.ravel()])
-
-    k1 = np.reshape(kde(p).T,x.shape)
-    #k2 = np.reshape(kde2(p).T,x.shape)
-    #k3 = np.reshape(kde3(p).T,x.shape)
-
-    k1 = k1.T
-    #k2 = k2.T
-    #k3 = k3.T
-
-    return k1#,k2,k3
-
-
-def ReadParameters(param_file):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-
-    type_of_var = {"filename":"str",
-                   "root":"str",
-                   "dims":"int",
-                   "mask_xmin":"int",
-                   "mask_xmax":"int",
-                   "mask_ymin":"int",
-                   "mask_ymax":"int",
-                   "min_value":"float",
-                   "min_delta":"float",
-                   "min_npix":"int",
-                   "pixel_pc":"float",
-                   "pixel_vel":"float"}
-
-    param = {"filename":"holder",
-             "root":"holder",
-             "dims":2,
-             "mask_xmin":1,
-             "mask_xmax":1,
-             "mask_ymin":1,
-             "mask_ymax":1,
-             "min_value":1.0,
-             "min_delta":1.0,
-             "min_npix":1,
-             "pixel_pc":1.0,
-             "pixel_vel":1.0,}
-    
-
-    with open(param_file) as f:
-        for line in f:
-            words = line.split()
-            try:
-                var = type_of_var[words[0]]
-                
-                if(var=="str"):
-                    param[words[0]]=words[1]
-                elif(var=="int"):
-                    param[words[0]]=int(words[1])                    
-                elif(var=="float"):
-                    param[words[0]]=float(words[1])
-                else:
-                    print("The variable is neither a string, float or integer. I don't know how to deal with this")
-
-            except KeyError:
-                print("There is no such parameter. Add it to the type_of_var and param dictionaries")
-
-    f.close()
-    return param
-
-
-    
-
-    
-def filament_grid(xpix, ypix, nfils, fil_length, fil_width,seed=0):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    """
-    nfils randomly oriented filaments of length fil_length and 
-    aspect ratio fil_aspecton an xpix by ypix grid. 
-    Filaments have uniform density.
-    """
-    if seed!=0:
-        np.random.seed(seed)
-    grid=np.zeros((xpix,ypix))
-    angles = np.random.rand(nfils)*np.pi
-    xpos = np.random.rand(nfils)*xpix
-    ypos = np.random.rand(nfils)*ypix
-    
-    for i in range(nfils):
-        grad=np.tan(angles[i])
-        for y in range(ypix):
-            for x in range(xpix):
-                if ((x-xpos[i])**2 + (y-ypos[i])**2) < (0.5*fil_length)**2:
-                    #within distance
-                    if (y-ypos[i])-(grad*(x-xpos[i]))<0.0001:
-                        grid[x,y]+=1
-    return grid
-
-    
 
 
 def m11(grid,com):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
+
     ny=grid.shape[1]
     dr11=0
 
@@ -584,18 +222,8 @@ def m11(grid,com):
     return dr11
     
 
-
 def m22(grid,com):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
+
     nx=grid.shape[0]
     dr22=0
 
@@ -606,19 +234,8 @@ def m22(grid,com):
     return dr22
     
 
-
-
 def m12(grid,com):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
+
     nx=grid.shape[0]
     ny=grid.shape[1]
     dr12=0
@@ -634,32 +251,14 @@ def m12(grid,com):
     return dr12
     
 def theta(M11,M22,M12):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
+
     th=0.5*np.arctan2((2*M12),(M11-M22))
 
     return th
     
 
 def i12(grid,com):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
+
     M11=m11(grid,com)
     M22=m22(grid,com)
     M12=m12(grid,com)
@@ -678,13 +277,7 @@ def i12(grid,com):
 
 def moments_2d(g):
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
+    Calculate 2D J values
     
     """
     com=spcom(g)
@@ -701,39 +294,59 @@ def moments_2d(g):
 
 def moments_3d(g):
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
+    Compute 3D J values    
     """
+    #Find mass, volume, centre of mass
     com=spcom(g)
-    Atot=np.count_nonzero(g)
-    Mtot=np.sum(g)
-    I1,I2,t1=i12(g,com)
-    first=min([I1,I2])
-    second=max([I1,I2])
-    ma=Atot*Mtot
-    II1=(ma - 4*np.pi*first)/(ma + 4*np.pi*first)
-    II2=(ma - 4*np.pi*second)/(ma + 4*np.pi*second)
+    Vtot=np.count_nonzero(g) #volume
+    Mtot=np.sum(g) #mass
 
-    return II1,II2,II3,com,t1
+    #get pixel indices
+    yind=np.arange(g.shape[0])
+    xind=np.arange(g.shape[1])
+    zind=np.arange(g.shape[2])
+    
+    #calculate moment of inertia
+    dx, dy, dz = np.meshgrid(xind,yind,zind)
+
+    dx=dx-com[0]
+    dy=dy-com[1]
+    dz=dz-com[2]
+    
+    Ixx=np.sum(((dy**2)+(dz**2))*g)
+    Iyy=np.sum(((dx**2)+(dz**2))*g)
+    Izz=np.sum(((dx**2)+(dy**2))*g)
+    
+    Ixy=-np.sum(dx*dy*g)
+    Iyz=-np.sum(dy*dz*g)
+    Ixz=-np.sum(dx*dz*g)
+    
+    Inertia_tensor=[[Ixx, Ixy, Ixz],
+                    [Ixy, Iyy, Iyz],
+                    [Ixz, Iyz, Izz]]
+
+    #Eigenvectors of inetia tensor are principle moments
+    ow,ov = np.linalg.eig(Inertia_tensor)
+    #Sort by size
+    eig_ord = np.argsort(ow)  # a thing to note is that here COLUMN i corrensponds to eigenvalue i.
+
+    w = ow[eig_ord] #Principle moments
+    v = ov[:, eig_ord].T #Vectors
+
+    #Calulate J values
+    I0=(2./5.)*Mtot*(((3.*Vtot)/(4.*np.pi))**(2./3.))
+    J1, J2, J3 = (I0-w)/(I0+w)
+
+    return J1,J2,J3
     
 def plot_interactive_axes(d,text=False,threedee=False):
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
+     Create interactive axes   
     """
-    f,bigax=plot_moments_axes(text=text)
+    f=plt.figure()
+    jax=plt.gca()
+    
+    jax=plot_moments_axes(jax,text=text)
     
     f.set_size_inches(12,6)
     
@@ -743,16 +356,6 @@ def plot_interactive_axes(d,text=False,threedee=False):
     #p = d.plotter()
     
     def onpick(event):
-        """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
         s = event.artist.get_gid()
         print(s)
         #p.plot_contour(dendax, structure=int(s), lw=3)
@@ -760,178 +363,47 @@ def plot_interactive_axes(d,text=False,threedee=False):
     
     f.canvas.mpl_connect('pick_event', onpick)
     
-    return bigax,dendax,f
+    return jax,dendax,f
     
-def plot_moments_axes(text=False):
+def plot_moments_axes(ax,text=False):
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
+    Create Jplots blank axes with labels    
     """
     import matplotlib.pyplot as plt
     import matplotlib.patches as patches
        
     plt.rcParams.update({'font.size': 18, 'font.family':'serif','text.usetex':False})
+
+    ax.axis('equal')
+    ax.set_xlim((-1.1,1.1))
+    ax.set_ylim((-1.1,1.1))
+    ax.xaxis.tick_top()
+    ax.grid()
     
-    f=plt.figure()
-    
-    bigax=plt.gca()
-    bigax.axis('equal')
-    bigax.set_xlim((-1.1,1.1))
-    bigax.set_ylim((-1.1,1.1))
-    bigax.xaxis.tick_top()
-    bigax.grid()
-    
-    bigax.vlines(0,-1.3,1.3)
-    bigax.hlines(0,-1.3,1.3)
+    ax.vlines(0,-1.3,1.3)
+    ax.hlines(0,-1.3,1.3)
     
    
-    bigax.add_patch(patches.Rectangle((-1.0, -1.0),1,1,alpha=0.2,color='b'))
-    bigax.add_patch(patches.Rectangle((0.0, 0.0),1,1,alpha=0.2,color='y'))
-    bigax.add_patch(patches.Rectangle((0.0, -1.0),1,1,alpha=0.2,color='r'))
+    ax.add_patch(patches.Rectangle((-1.0, -1.0),1,1,alpha=0.2,color='b'))
+    ax.add_patch(patches.Rectangle((0.0, 0.0),1,1,alpha=0.2,color='y'))
+    ax.add_patch(patches.Rectangle((0.0, -1.0),1,1,alpha=0.2,color='r'))
     #bigax.add_patch(patches.Rectangle((0.0, -0.5),0.5,0.5,alpha=0.1,color='r'))
     
     if text:
         fs=16
-        bigax.text(0.1,0.8,'Centrally concentrated',color='y',fontsize=fs)
-        bigax.text(-0.9,-0.9,'Shell',color='b',fontsize=fs)
-        bigax.text(0.5,-0.9,'Filament',color='r',fontsize=fs)
+        ax.text(0.1,0.8,'Centrally concentrated',color='y',fontsize=fs)
+        ax.text(-0.9,-0.9,'Bubble',color='b',fontsize=fs)
+        ax.text(0.5,-0.9,'Filament',color='r',fontsize=fs)
     
-    bigax.set_xlabel(r'$J_{1}$')
-    bigax.set_ylabel(r'$J_{2}$')
-    bigax.xaxis.set_label_position('top')
-    return f, bigax
-    
+    ax.set_xlabel(r'$J_{1}$')
+    ax.set_ylabel(r'$J_{2}$')
+    ax.xaxis.set_label_position('top')
+    return ax
 
-def figure_wsc_GC(figure_number, fits_header):
-    """
-    
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    From Elizabeth Watkins.
-    
-    This function creates a figure with galactic co-ordinates
-    To add annotations or to limit the size, you use pixel co-ordinates
-    and normal matplotlib functions.
-    To add or change stuff see: 
-    http://wcsaxes.readthedocs.io/en/latest/ticks_labels_grid.html#
-    """
-    from astropy.wcs import WCS
-    import matplotlib.pyplot as plt
-    
-    wcs = WCS(fits_header)
-
-    fig = plt.figure(figure_number)
-    ax = fig.add_subplot(111, projection=wcs)
-
-    lon = ax.coords[0]
-    lon = ax.coords['glon']
-    lon.set_axislabel( 'Galactic Longitude', fontsize = 15 )
-    lon.set_major_formatter('dd:mm') # so only shows degs and min
-    lon.set_ticks(color='black', exclude_overlapping=True, size = 6)
-    lon.set_minor_frequency(5)
-    lon.display_minor_ticks(True)
-
-    lat = ax.coords[1]
-    lat = ax.coords['glat']
-    lat.set_axislabel( 'Galactic Latitude', fontsize = 15 )
-    lat.set_major_formatter('dd:mm') # so only shows degs and min
-    lat.set_ticks(color='black', exclude_overlapping=True, size = 6)
-    lat.set_minor_frequency(5)
-    lat.display_minor_ticks(True)
-    
-def find_coords(gal_lat,gal_lon):
-    """
-    Convert galactic latitude and longitude in degrees
-    to FK5 coordinates.
-    gal_lat = 'XXdXXmXXs'
-    gal_lon = 'XXdXXmXXs'
-    
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    
-    from astropy.coordinates import SkyCoord
-    rcw = SkyCoord(gal_lat,gal_lon, frame='galactic')
-    return rcw.fk5
-    
-def compute_dend(params, filename='',root='', data=[]):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    """
-    If dend file already exists, read in.
-    Else, compute and save dend.
-    """
-    from astropy.io import fits
-    from astrodendro import Dendrogram
-    import os
-    
-    dendfolder='%s/%s_dend_%1.1e_%1.1e_%1.1e'%(root, 
-                                                   filename,
-                                                   params[0],
-                                                   params[1],
-                                                   params[2])
-    
-    if (os.path.isdir(dendfolder) and os.path.isfile("%s/dendrogram.fits"%dendfolder)):
-        print("Reading dend")
-        d = Dendrogram.load_from("%s/dendrogram.fits"%dendfolder)
-    else:
-        print("Building dend")
-        if len(data)>0:
-            array=data
-        elif len(filename)>0:
-            array = fits.getdata('%s/%s.fits'%(root,filename))
-        else:
-            print("Please specify a filename and root or data for 'compute_dend' function.")
-            return 0
-        d = Dendrogram.compute(array, 
-                               min_value=params[0],
-                               min_delta=params[1],
-                               min_npix =params[2])
-        d.save_to("%s/dendrogram.fits"%dendfolder)
-
-    return d
-
-def distance_to_fil(x,y):
-    """Calculate desitance of point (x,y)
-    from diagonal line y=-x"""
-    return (x+y)/np.sqrt(2)
     
 def testdata2d(n,shape='noisy'):
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
+    Create various test shapes in 3D    
     """
     # n is gridsize
     grid=np.zeros((n,n))
@@ -961,13 +433,13 @@ def testdata2d(n,shape='noisy'):
                 if dr<1.:
                     grid[i,j]=1
     elif shape=='fil-thin':
-        grid[n*0.4:n*0.45,:]=1
+        grid[int(n*0.4):int(n*0.45),:]=1
     elif shape=='fil-thick':
-        grid[n*0.3:n*0.6,:]=1
+        grid[int(n*0.3):int(n*0.6),:]=1
     elif shape=='fil-thin2':
-        grid[:,n*0.4:n*0.45]=1
+        grid[:,int(n*0.4):int(n*0.45)]=1
     elif shape=='fil-thick2':
-        grid[:,n*0.3:n*0.6]=1
+        grid[:,int(n*0.3):int(n*0.6)]=1
     elif shape=='disk-cc':
         for i in range(n):
             dx=i-(n/2.)
@@ -1022,10 +494,10 @@ def testdata2d(n,shape='noisy'):
                     grid[i,j]=1
                 if dr<n/4:
                     grid[i,j]=0
-        noise=np.random.rand(0.01*n**2).reshape(0.1*n,0.1*n)
+        noise=np.random.rand(int(0.01*n**2)).reshape(int(0.1*n),int(0.1*n))
         for i in range(n):
             for j in range(n):
-                grid[i,j]=np.floor(grid[i,j]*2*noise[i/10,j/10])
+                grid[i,j]=np.floor(grid[i,j]*2*noise[int(i/10),int(j/10)])
 
     elif shape=='disk':
         for i in range(n):
@@ -1091,14 +563,7 @@ def testdata2d(n,shape='noisy'):
 
 def ellipsoid(n,a,b,c):
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
+    Make 3D pixelated ellipsoid
     """
     grid=np.zeros((n,n,n))
     cen=int(n/2.)
@@ -1111,14 +576,7 @@ def ellipsoid(n,a,b,c):
 
 def testdata3d(n, shape='sphere'):
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
+    Make simple 3D shapes for testing J3D    
     """
     # n is gridsize
     grid=np.zeros((n,n,n))
@@ -1203,11 +661,11 @@ def testdata3d(n, shape='sphere'):
         for i in range(n):
             for j in range(n):
                 for k in range(n):
-                    grid[i,j,k]=np.floor(grid[i,j,k]*2*noise[i/10,j/10,k/10])
+                    grid[i,j,k]=np.floor(grid[i,j,k]*2*noise[int(i/10),int(j/10),int(k/10)])
         
     elif shape=='shell-half':
         c=int(n/2.)
-        for i in range(n/2):
+        for i in range(int(n/2)):
             for j in range(n):
                 for k in range(n):
                     if ((i-c)**2 + (j-c)**2 + (k-c)**2)<((n/2.)**2):
@@ -1228,7 +686,7 @@ def testdata3d(n, shape='sphere'):
                     
     elif shape=='ring-half':
         k=0
-        for i in range(n/2):
+        for i in range(int(n/2)):
             dx=i-(n/2.)
             for j in range(n):
                 dy=j-(n/2.)
@@ -1277,112 +735,11 @@ def testdata3d(n, shape='sphere'):
                         grid[i,j,k]=1 
                     
     return grid
-
-def small_3d_plot(ax,g):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    ax.set_xlim3d(0,g.shape[0])
-    ax.set_ylim3d(0,g.shape[1])
-    ax.set_zlim3d(0,g.shape[2])
-
-    for i in range(g.shape[0]):
-        for j in range(g.shape[1]):
-            for k in range(g.shape[2]):
-                if (g[i,j,k]>0):
-                    ax.scatter([i],[j],[k],c='k',marker='.',alpha=0.1)
-                    
-def image_moment(image, p, q, r=-1, dims=2):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    if dims==2:
-        m = im_2d(image, p, q)
-    elif dims==3:
-        if r==-1:
-            raise ValueError("Need order for 3rd dimension moment")
-        m = im_3d(image, p, q, r)
-    else:
-        raise ValueError("Number of dimensions is invalid")
-    return m
-        
-def im_2d(image,p,q):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    nx, ny = image.shape
-    x_ind, y_ind = np.mgrid[:nx, :ny]
-    moment=(image * x_ind**p * y_ind**q).sum()
-    return moment
-        
-def im_3d(image,p,q,r):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    nx, ny, nz = image.shape
-    x_ind, y_ind, z_ind = np.mgrid[:nx, :ny, :nz]
-    moment=(image * x_ind**p * y_ind**q * z_ind**r).sum()
-    return moment
-
-def im_com(image):
-    """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
-    """
-    #0th moment is summ of pixel values
-    m00=image_moment(image,0,0)
-    m10=image_moment(image,1,0)
-    m01=image_moment(image,0,1)
-    
-    x_com=m10/m00
-    y_com=m01/m00
-    
-    return [x_com,y_com]
+       
     
 def plot3dax():
     """
-    
-    Parameters
-    ----------
-    
-    
-    Returns
-    ----------
-    
+    Make 3D axes and set limits and labels
     """
     from mpl_toolkits.mplot3d import Axes3D
     
@@ -1402,6 +759,6 @@ def plot3dax():
     ax.plot([0,0],[-1.3,1.3],[0,0],'k-')
     ax.plot([-1.3,1.3],[0,0],[0,0],'k-')
     
-    ax.axis('equal')
+    #ax.axis('equal')
     
     return ax
