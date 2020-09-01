@@ -1,38 +1,27 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
 """
 Created on Fri Jan 17 11:44:53 2020
 
 @author: sarah
 """
 
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul 27 17:09:25 2017
-
-@author: sjaffa
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import matplotlib.patches as patches
 from scipy.ndimage.measurements import center_of_mass as spcom
 import momentsmod as mm
 from mpl_toolkits.mplot3d import Axes3D
-from astropy.io import fits
-from astrodendro import Dendrogram
 
 #3D
 testlist=['sphere',
           'flat-disk','thick-disk',
-          'shell-thin','shell-thick',#'shell-half', 
-          #'shell-thin-noise','shell-thick-noise',
+          'shell-thin','shell-thick','shell-half', 
+          'shell-thin-noise','shell-thick-noise',
           'ring-thin', 'ring-half',
           'plane-thick','plane-thin','rect-thin',
           'cc',
           'fil-thick','fil-thin','fil-asym',
-          'ellipsoid-pro', 'ellipsoid-ob',]#'ellipsoid-ob2','ellipsoid-ob4' 'ellipsoid-tri'
+          'ellipsoid-ob2','ellipsoid-ob4', 'ellipsoid-tri',
+          'ellipsoid-pro', 'ellipsoid-ob',]
         
 fig = plt.figure()
 gridspec.GridSpec(5,5)
