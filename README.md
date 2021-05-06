@@ -53,6 +53,7 @@ The scripts included in the 'tests' folder give basic examples of how to use J p
 
 If you wish to use the code as it is to analyse your own work, please cite the relevant papers in your publication. If you wish to edit the code, expand it with new features, point out bugs or suggest improvements please contact the authors either by email or through the GitHub issue tracking page. This code is shared under the GNU GPLv3 license. For further detail please see the LICENSE file.
 
-If you need help running the code or interpreting your results, we would be happy to collaborate!
 
+# Citation
 
+If you use this code in your work, please cite the original [J plots paper](https://arxiv.org/abs/1803.01640) and/or cite the code directly via the [Astrophysical Source Code Library](https://ascl.net/code/v/2657). If you need help running the code or interpreting your results, we would be happy to collaborate!
