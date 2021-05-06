@@ -8,10 +8,6 @@ Created on Tue May 26 14:56:24 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-import sys
-sys.path.append('../src/')
-
 import momentsmod as mm
 
 from astropy.io import fits #for reading data
@@ -21,8 +17,8 @@ from astrodendro import Dendrogram #for segmenting image
 
 # Read in data
 print('====Importing data')
-filename='nh2C_mosaic341352'
-data, header = fits.getdata(filename+'.fits',header=True)
+filename='../data/nh2C_mosaic341352.fits'
+data, header = fits.getdata(filename,header=True)
 
 
 
@@ -54,7 +50,7 @@ d = Dendrogram.compute(data,
 
 #%%
 
-#Plot image
+#Plot observed image
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,6))
 im=ax2.imshow(data,interpolation='none',
               origin='lower',
@@ -66,14 +62,12 @@ plt.title(filename)
 ax1=mm.plot_moments_axes(ax1,text=True)
 
 #%%
-
-################################################## neat to here
         
 nl=sum([len(d.trunk[i].descendants) for i in range(len(d.trunk))])+len(d.trunk)
 print('====Analysing %i structures'%nl)
 trunks=[t.idx for t in d.trunk]        
 
-structs=np.zeros((nl,3)) #IDs and J values of each structure
+structs=np.zeros((nl,3)) # structure ID and J values of each structure
 
 for l in d.all_structures:
     idx=l.idx #ID of structure
@@ -90,10 +84,9 @@ for l in d.all_structures:
     if 0: #optionally add structure ID to plot
         ax1.text(J1,J2,"%i"%idx,color='k')
 
-#Save plot
+#Save plot and J values to file
 plt.savefig(filename+'_jplot.pdf')
-
-# Save J values to file
+ 
 outfile=filename+'.jvals'
 np.savetxt(outfile, structs, fmt=['%i', '%5.4f', '%5.4f'],
            header=filename+'\nID\tJ1\tJ2')

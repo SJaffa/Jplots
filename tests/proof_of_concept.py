@@ -6,6 +6,10 @@ Created on Thu Jul 27 17:09:25 2017
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+
+import sys
+sys.path.append('../src/')
+
 import momentsmod as mm
 
 testlist = [#'diag-fil','diag-fil2',
@@ -37,13 +41,11 @@ for n in testlist:
     plt.setp(smallax.get_yticklabels(), visible=False)
     smallax.text(5, 85, "%i"%c, color='k', fontsize=14)
 
-    
     J1,J2,com,t1 = mm.moments_2d(g)
-
 
     bigax.plot(J1, J2, marker='o', label=n, color='k')
     bigax.text(J1, J2+0.05, "%i"%c, color='k', fontsize=14)
-    print()
+
     c += 1
 
 bigax=mm.plot_moments_axes(bigax, text=True)

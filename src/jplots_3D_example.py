@@ -11,7 +11,7 @@ from astrodendro import Dendrogram
 #Read in data and log
 print("=============Read in data")
 
-infile='./RUNI032_griddump.out'
+infile='../data/RUNI032_griddump.out'
 xind,yind,zind,val=np.loadtxt(infile,unpack=True)
 
 #Make into 3D array
